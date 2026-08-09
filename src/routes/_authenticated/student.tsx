@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PackageSearch, Receipt, Wallet } from "lucide-react";
 import { Plus, ShoppingCart, Star } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,7 @@ function StudentDashboard() {
     queryFn: () => getProducts(),
   });
 
-  const { items } = useSuspenseQuery({
+  const { data: orders } = useSuspenseQuery({
     queryKey: ["student-orders"],
     queryFn: () => getStudentOrders(),
   });
@@ -79,12 +80,12 @@ function StudentDashboard() {
         <StatCard
           icon={Receipt}
           label="Active orders"
-          value={items.filter((o) => o.status !== "delivered" && o.status !== "cancelled").length.toString()}
+          value={orders.filter((o: any) => o.status !== "delivered" && o.status !== "cancelled").length.toString()}
         />
         <StatCard
           icon={PackageSearch}
           label="Completed orders"
-          value={items.filter((o) => o.status === "delivered").length.toString()}
+          value={orders.filter((o: any) => o.status === "delivered").length.toString()}
         />
       </div>
 
