@@ -14,8 +14,12 @@ import { formatCurrency } from "@/lib/roles";
 export const Route = createFileRoute("/_authenticated/student")({
   head: () => ({
     meta: [
-      { title: "Marketplace — TILETA" },
-      { name: "description", content: "Browse campus businesses and order essentials." },
+      { title: "Marketplace | TILETA" },
+      { name: "description", content: "Browse featured campus products, hot meals, groceries, and study materials on the TILETA marketplace." },
+      { property: "og:title", content: "Marketplace | TILETA" },
+      { property: "og:description", content: "Order everything you need on campus with fast student delivery." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: async ({ context }) => {
