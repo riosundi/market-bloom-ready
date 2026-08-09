@@ -7,18 +7,18 @@ import { formatCurrency } from "@/lib/roles";
 export const Route = createFileRoute("/_authenticated/business")({
   head: () => ({
     meta: [
-      { title: "Seller dashboard — TILETA" },
+      { title: "Seller Dashboard | TILETA" },
       {
         name: "description",
         content: "Manage your campus store products, orders and revenue on TILETA.",
       },
-      { property: "og:title", content: "Seller dashboard — TILETA" },
+      { property: "og:title", content: "Seller Dashboard | TILETA" },
       {
         property: "og:description",
         content: "Manage your store products, orders and revenue.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),

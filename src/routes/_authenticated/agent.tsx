@@ -8,15 +8,15 @@ import { formatCurrency } from "@/lib/roles";
 export const Route = createFileRoute("/_authenticated/agent")({
   head: () => ({
     meta: [
-      { title: "Agent dashboard — TILETA" },
+      { title: "Agent Dashboard | TILETA" },
       {
         name: "description",
         content: "Accept campus delivery jobs and track your earnings.",
       },
-      { property: "og:title", content: "Agent dashboard — TILETA" },
+      { property: "og:title", content: "Agent Dashboard | TILETA" },
       { property: "og:description", content: "Accept delivery jobs and track earnings." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
