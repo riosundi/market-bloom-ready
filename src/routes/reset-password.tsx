@@ -13,18 +13,18 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Choose a new password — TILETA" },
+      { title: "Reset Password | TILETA" },
       {
         name: "description",
         content: "Set a new password for your TILETA campus marketplace account.",
       },
-      { property: "og:title", content: "Choose a new password — TILETA" },
+      { property: "og:title", content: "Reset Password | TILETA" },
       {
         property: "og:description",
         content: "Set a new password for your TILETA account.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
