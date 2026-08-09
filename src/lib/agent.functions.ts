@@ -9,7 +9,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  */
 
 export const askAgent = createServerFn({ method: "POST" })
-  .inputValidator((data) => z.object({
+  .inputValidator((data: unknown) => z.object({
     prompt: z.string(),
   }).parse(data))
   .handler(async ({ data }) => {
@@ -20,7 +20,6 @@ export const askAgent = createServerFn({ method: "POST" })
     // In a real app, this would call an LLM which decides which MCP tools to call
     
     if (lowerPrompt.includes("product") || lowerPrompt.includes("buy") || lowerPrompt.includes("search")) {
-      // "Agent" decides to call get_products MCP tool logic internally
       const { data: products } = await supabaseAdmin
         .from("products")
         .select("name, price, businesses(store_name)")
@@ -38,7 +37,6 @@ export const askAgent = createServerFn({ method: "POST" })
     }
 
     if (lowerPrompt.includes("order") || lowerPrompt.includes("status") || lowerPrompt.includes("track")) {
-      // "Agent" decides to check orders
       const { data: orders } = await supabaseAdmin
         .from("orders")
         .select("id, status, total, created_at")
@@ -53,6 +51,12 @@ export const askAgent = createServerFn({ method: "POST" })
       }
 
       const latest = orders[0];
+      if (!latest) {
+          return {
+            answer: "Something went wrong retrieving your order status.",
+            suggestedActions: ["Try Again"]
+          };
+      }
       return {
         answer: `Your most recent order (ID: ${latest.id.slice(0, 8)}...) is currently **${latest.status}**. The total was ${latest.total} NGN.`,
         suggestedActions: ["View Order History", "Contact Support"]

@@ -1,24 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-
-// This file defines the MCP server logic as server functions
-// In a real production environment, you might run this as a standalone process
-// but for this implementation we expose it via TanStack Start server functions
 
 /**
  * MCP Server Implementation for Tileta
  * Tools provided:
  * - get_products: Search/List products
- * - create_order: Create an order for the authenticated user
  * - get_order_status: Check status of an existing order
  */
 
 export const mcpCallTool = createServerFn({ method: "POST" })
-  .inputValidator((data) => z.object({
+  .inputValidator((data: unknown) => z.object({
     name: z.string(),
     arguments: z.record(z.any()).optional()
   }).parse(data))
