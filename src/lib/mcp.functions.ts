@@ -11,10 +11,11 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const mcpCallTool = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => {
-    return z.object({
+    const schema = z.object({
       name: z.string(),
       arguments: z.record(z.any()).optional()
-    }).parse(data);
+    });
+    return schema.parse(data);
   })
   .handler(async ({ data }) => {
     const { name, arguments: args } = data;
