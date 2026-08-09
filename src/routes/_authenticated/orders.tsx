@@ -16,10 +16,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/orders")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
-      queryKey: ["student-orders"],
-      queryFn: () => getStudentOrders(),
-    });
+    // Protected data is fetched on the client where the session is available.
   },
   component: OrdersPage,
 });

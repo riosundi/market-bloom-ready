@@ -19,16 +19,9 @@ export const Route = createFileRoute("/_authenticated/student")({
     ],
   }),
   loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData({
-        queryKey: ["products"],
-        queryFn: () => getProducts(),
-      }),
-      context.queryClient.ensureQueryData({
-        queryKey: ["student-orders"],
-        queryFn: () => getStudentOrders(),
-      }),
-    ]);
+    // We don't prefetch protected data on the server during SSR 
+    // because the session is in the browser's localStorage.
+    // useSuspenseQuery in the component will handle the fetch on the client.
   },
   component: StudentDashboard,
 });

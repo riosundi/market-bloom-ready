@@ -13,7 +13,7 @@ export const mcpCallTool = createServerFn({ method: "POST" })
   .validator((data: unknown): { name: string; arguments?: Record<string, any> | undefined } => {
     return z.object({
       name: z.string(),
-      arguments: z.record(z.any()).optional()
+      arguments: z.record(z.string(), z.any()).optional()
     }).parse(data);
   })
   .handler(async ({ data }) => {
