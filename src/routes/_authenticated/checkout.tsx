@@ -42,7 +42,7 @@ function CheckoutPage() {
     try {
       // Assuming all items from same business for now as MVP
       // In a real app, we'd group items by business and create multiple orders
-      const businessId = items[0].business_id;
+      const businessId = items[0]?.business_id;
 
       await createOrderFn({
         data: {
@@ -173,8 +173,3 @@ function CheckoutPage() {
     </AppShell>
   );
 }
-
-const createFileRoute = (path: string) => {
-    // This is a placeholder for actual createFileRoute import which is handled above
-    return {} as any;
-};
