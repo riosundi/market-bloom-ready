@@ -6,18 +6,18 @@ import { AppShell } from "@/components/app-shell";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin dashboard — TILETA" },
+      { title: "Admin Dashboard | TILETA" },
       {
         name: "description",
         content: "Oversee users, stores, riders and platform activity on TILETA.",
       },
-      { property: "og:title", content: "Admin dashboard — TILETA" },
+      { property: "og:title", content: "Admin Dashboard | TILETA" },
       {
         property: "og:description",
         content: "Oversee users, stores, riders and platform activity.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
