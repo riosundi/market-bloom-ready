@@ -12,7 +12,10 @@ import { DELIVERY_FEE, formatCurrency } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/checkout")({
   head: () => ({
-    meta: [{ title: "Checkout — TILETA" }],
+    meta: [
+      { title: "Checkout | TILETA" },
+      { name: "description", content: "Complete your TILETA order with secure campus delivery." },
+    ],
   }),
   component: CheckoutPage,
 });
