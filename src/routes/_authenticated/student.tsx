@@ -1,12 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PackageSearch, Receipt, Wallet } from "lucide-react";
 import { Plus, ShoppingCart, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
-import { getProducts } from "@/lib/orders.functions";
+import { createOrder, getProducts, getStudentOrders } from "@/lib/orders.functions";
 import { formatCurrency } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/student")({
@@ -17,21 +18,35 @@ export const Route = createFileRoute("/_authenticated/student")({
     ],
   }),
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
-      queryKey: ["products"],
-      queryFn: () => getProducts(),
-    });
+    await Promise.all([
+      context.queryClient.ensureQueryData({
+        queryKey: ["products"],
+        queryFn: () => getProducts(),
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["student-orders"],
+        queryFn: () => getStudentOrders(),
+      }),
+    ]);
   },
   component: StudentDashboard,
 });
 
 function StudentDashboard() {
+  const { profile } = useAuth();
+  const firstName = profile?.full_name?.split(" ")[0] ?? "there";
+
   const { data: products } = useSuspenseQuery({
     queryKey: ["products"],
     queryFn: () => getProducts(),
   });
 
-  const { addItem, items } = useCart();
+  const { items } = useSuspenseQuery({
+    queryKey: ["student-orders"],
+    queryFn: () => getStudentOrders(),
+  });
+
+  const { addItem, items: cartItems } = useCart();
 
   const handleAddToCart = (product: any) => {
     addItem(product);
@@ -40,21 +55,42 @@ function StudentDashboard() {
 
   return (
     <AppShell
-      title="Marketplace"
+      title={`Hi ${firstName}`}
       subtitle="Everything you need, delivered straight to your door."
       actions={
         <Button variant="outline" className="relative" asChild>
           <Link to="/checkout">
             <ShoppingCart className="h-4 w-4" />
-            {items.length > 0 && (
+            {cartItems.length > 0 && (
               <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-                {items.length}
+                {cartItems.length}
               </span>
             )}
           </Link>
         </Button>
       }
     >
+      <div className="mb-10 grid gap-4 md:grid-cols-3">
+        <StatCard
+          icon={Wallet}
+          label="Wallet balance"
+          value={formatCurrency(profile?.wallet_balance ?? 0)}
+        />
+        <StatCard
+          icon={Receipt}
+          label="Active orders"
+          value={items.filter((o) => o.status !== "delivered" && o.status !== "cancelled").length.toString()}
+        />
+        <StatCard
+          icon={PackageSearch}
+          label="Completed orders"
+          value={items.filter((o) => o.status === "delivered").length.toString()}
+        />
+      </div>
+
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Featured Products</h2>
+      </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products?.map((product) => (
           <div
@@ -104,5 +140,25 @@ function StudentDashboard() {
         ))}
       </div>
     </AppShell>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: any;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border bg-card p-6">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <Icon className="h-5 w-5" />
+      </div>
+      <p className="mt-4 text-sm text-muted-foreground">{label}</p>
+      <p className="text-2xl font-bold">{value}</p>
+    </div>
   );
 }
