@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut, Package } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/logo";
@@ -35,11 +35,23 @@ export function AppShell({
           <Link to="/">
             <Logo />
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/student">
+                <LayoutDashboard className="mr-0 h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/orders">
+                <Package className="mr-0 h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">My Orders</span>
+              </Link>
+            </Button>
             {actions}
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign out
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-destructive hover:bg-destructive/10">
+              <LogOut className="mr-0 h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Sign out</span>
             </Button>
           </div>
         </div>
