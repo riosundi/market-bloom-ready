@@ -43,13 +43,15 @@ function StudentDashboard() {
       title="Marketplace"
       subtitle="Everything you need, delivered straight to your door."
       actions={
-        <Button variant="outline" className="relative">
-          <ShoppingCart className="h-4 w-4" />
-          {items.length > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-              {items.length}
-            </span>
-          )}
+        <Button variant="outline" className="relative" asChild>
+          <Link to="/checkout">
+            <ShoppingCart className="h-4 w-4" />
+            {items.length > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                {items.length}
+              </span>
+            )}
+          </Link>
         </Button>
       }
     >
