@@ -38,7 +38,7 @@ export const askAgent = createServerFn({ method: "POST" })
       // "Agent" decides to check orders
       const { data: orders } = await supabaseAdmin
         .from("orders")
-        .select("id, status, total_amount, created_at")
+        .select("id, status, total_price, created_at")
         .order("created_at", { ascending: false })
         .limit(1);
 
@@ -51,7 +51,7 @@ export const askAgent = createServerFn({ method: "POST" })
 
       const latest = orders[0];
       return {
-        answer: `Your most recent order (ID: ${latest.id.slice(0, 8)}...) is currently **${latest.status}**. The total was ${latest.total_amount} NGN.`,
+        answer: `Your most recent order (ID: ${latest.id.slice(0, 8)}...) is currently **${latest.status}**. The total was ${latest.total_price} NGN.`,
         suggestedActions: ["View Order History", "Contact Support"]
       };
     }

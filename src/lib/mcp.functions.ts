@@ -22,15 +22,12 @@ export const mcpCallTool = createServerFn({ method: "POST" })
     name: z.string(),
     arguments: z.record(z.any()).optional()
   }).parse(data))
-  .handler(async ({ data, request }) => {
-    // Note: In a real app, you'd check auth here
-    // For now we'll allow basic product queries to demonstrate the integration
-    
+  .handler(async ({ data }) => {
     const { name, arguments: args } = data;
 
     switch (name) {
       case "get_products": {
-        const query = args?.query as string | undefined;
+        const query = args?.['query'] as string | undefined;
         let supabaseQuery = supabaseAdmin
           .from("products")
           .select("*, businesses(store_name)");
@@ -49,7 +46,7 @@ export const mcpCallTool = createServerFn({ method: "POST" })
       }
 
       case "get_order_status": {
-        const orderId = args?.orderId as string;
+        const orderId = args?.['orderId'] as string;
         if (!orderId) throw new Error("orderId is required");
 
         const { data: order, error } = await supabaseAdmin
@@ -61,7 +58,7 @@ export const mcpCallTool = createServerFn({ method: "POST" })
         if (error) throw new Error(error.message);
 
         return {
-          content: [{ type: "text", text: `Order ${orderId} status: ${order.status}. Total: ${order.total_amount}` }]
+          content: [{ type: "text", text: `Order ${orderId} status: ${order.status}. Total: ${order.total_price}` }]
         };
       }
 
