@@ -9,9 +9,11 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  */
 
 export const askAgent = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => z.object({
-    prompt: z.string(),
-  }).parse(data))
+  .inputValidator((data: unknown) => {
+    return z.object({
+      prompt: z.string(),
+    }).parse(data);
+  })
   .handler(async ({ data }) => {
     const { prompt } = data;
     const lowerPrompt = prompt.toLowerCase();

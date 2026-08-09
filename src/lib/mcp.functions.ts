@@ -9,13 +9,13 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  * - get_order_status: Check status of an existing order
  */
 
-const mcpInputValidator = (data: unknown) => z.object({
-  name: z.string(),
-  arguments: z.record(z.any()).optional()
-}).parse(data);
-
 export const mcpCallTool = createServerFn({ method: "POST" })
-  .inputValidator(mcpInputValidator)
+  .inputValidator((data: unknown) => {
+    return z.object({
+      name: z.string(),
+      arguments: z.record(z.any()).optional()
+    }).parse(data);
+  })
   .handler(async ({ data }) => {
     const { name, arguments: args } = data;
 
