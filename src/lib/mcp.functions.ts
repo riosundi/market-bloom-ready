@@ -10,7 +10,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  */
 
 export const mcpCallTool = createServerFn({ method: "POST" })
-  .inputValidator((data: any) => {
+  .inputValidator((data: unknown): { name: string; arguments?: Record<string, any> } => {
     return z.object({
       name: z.string(),
       arguments: z.record(z.any()).optional()
