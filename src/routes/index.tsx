@@ -23,20 +23,22 @@ import { dashboardPath } from "@/lib/roles";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "TILETA — The Smart Campus Marketplace" },
+      { title: "TILETA — Smart Campus Marketplace for Students" },
       {
         name: "description",
         content:
-          "Order food, groceries, study materials, electronics and fashion from campus businesses. Fast student delivery, secure wallet payments.",
+          "Order food, groceries, books, and electronics from campus stores. Fast student delivery and secure payments with TILETA - the smart marketplace for students.",
       },
       { property: "og:title", content: "TILETA — The Smart Campus Marketplace" },
       {
         property: "og:description",
         content:
-          "Order food, groceries, study materials, electronics and fashion from campus businesses. Fast student delivery, secure wallet payments.",
+          "Join thousands of students ordering essentials from trusted campus businesses. Fast delivery and secure wallet payments.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png" },
     ],
   }),
   component: Index,
@@ -184,9 +186,9 @@ function Index() {
             <div className="relative aspect-square overflow-hidden rounded-3xl border bg-card shadow-2xl">
               <img
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png"
-                alt="TILETA blue angular logo with a green package mark"
+                alt="TILETA - The smart campus marketplace branding"
                 className="h-full w-full object-cover"
-                loading="eager"
+                loading="lazy"
               />
             </div>
             <div className="glass absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border p-4 shadow-xl sm:flex">

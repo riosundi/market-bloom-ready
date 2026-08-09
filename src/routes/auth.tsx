@@ -23,19 +23,19 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in to TILETA — Campus Marketplace" },
+      { title: "Sign In | TILETA — Campus Marketplace" },
       {
         name: "description",
         content:
-          "Log in or create your TILETA account as a student, delivery agent or campus business.",
+          "Log in or create your TILETA account. Join the campus marketplace as a student, delivery agent, or business.",
       },
-      { property: "og:title", content: "Sign in to TILETA" },
+      { property: "og:title", content: "Sign In | TILETA" },
       {
         property: "og:description",
-        content: "Log in or create your TILETA account in seconds.",
+        content: "Access the smart campus marketplace. Secure login for students and businesses.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,
