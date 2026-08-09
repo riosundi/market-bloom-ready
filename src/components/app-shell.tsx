@@ -10,10 +10,12 @@ import { supabase } from "@/integrations/supabase/client";
 export function AppShell({
   title,
   subtitle,
+  actions,
   children,
 }: {
   title: string;
   subtitle?: string;
+  actions?: ReactNode;
   children: ReactNode;
 }) {
   const navigate = useNavigate();
@@ -33,10 +35,13 @@ export function AppShell({
           <Link to="/">
             <Logo />
           </Link>
-          <Button variant="ghost" size="sm" onClick={handleSignOut}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign out
-          </Button>
+          <div className="flex items-center gap-2">
+            {actions}
+            <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </Button>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-10">
