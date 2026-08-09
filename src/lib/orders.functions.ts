@@ -1,18 +1,21 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const getProducts = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*, businesses(store_name)")
-    .eq("status", "active");
+export const getProducts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("products")
+      .select("*, businesses(store_name)")
+      .eq("status", "active");
 
-  if (error) throw error;
-  return data;
-});
+    if (error) throw error;
+    return data;
+  });
 
 export const createOrder = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) =>
     z
       .object({
@@ -32,17 +35,13 @@ export const createOrder = createServerFn({ method: "POST" })
       })
       .parse(data)
   )
-  .handler(async ({ data }) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) throw new Error("Unauthorized");
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
 
-    // Start a transaction (or at least try to insert everything correctly)
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
-        student_id: user.id,
+        student_id: userId,
         business_id: data.business_id,
         subtotal: data.subtotal,
         delivery_fee: data.delivery_fee,
@@ -71,18 +70,15 @@ export const createOrder = createServerFn({ method: "POST" })
     return order;
   });
 
-export const getStudentOrders = createServerFn({ method: "GET" }).handler(async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
+export const getStudentOrders = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("orders")
+      .select("*, order_items(*)")
+      .eq("student_id", context.userId)
+      .order("created_at", { ascending: false });
 
-  const { data, error } = await supabase
-    .from("orders")
-    .select("*, order_items(*)")
-    .eq("student_id", user.id)
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data;
-});
+    if (error) throw error;
+    return data;
+  });
