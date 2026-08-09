@@ -15,6 +15,12 @@ import {
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/orders")({
+  head: () => ({
+    meta: [
+      { title: "My Orders | TILETA" },
+      { name: "description", content: "Track your campus deliveries and view your TILETA order history." },
+    ],
+  }),
   loader: async ({ context }) => {
     // Protected data is fetched on the client where the session is available.
   },
