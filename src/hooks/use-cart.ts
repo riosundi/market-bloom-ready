@@ -10,16 +10,16 @@ export interface CartItem {
   business_id: string;
 }
 
-interface CartStore {
+interface CartState {
   items: CartItem[];
-  addItem: (product: any) => void;
+  addItem: (product: { id: string; name: string; price: number; image_url?: string | null; business_id: string }) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   total: () => number;
 }
 
-export const useCart = create<CartStore>()(
+export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
@@ -37,12 +37,8 @@ export const useCart = create<CartStore>()(
             items: [
               ...state.items,
               {
-                id: product.id,
-                name: product.name,
-                price: product.price,
+                ...product,
                 quantity: 1,
-                image_url: product.image_url,
-                business_id: product.business_id,
               },
             ],
           };
@@ -55,9 +51,9 @@ export const useCart = create<CartStore>()(
       },
       updateQuantity: (productId, quantity) => {
         set((state) => ({
-          items: state.items.map((i) =>
-            i.id === productId ? { ...i, quantity: Math.max(0, quantity) } : i
-          ).filter(i => i.quantity > 0),
+          items: state.items
+            .map((i) => (i.id === productId ? { ...i, quantity: Math.max(0, quantity) } : i))
+            .filter((i) => i.quantity > 0),
         }));
       },
       clearCart: () => set({ items: [] }),
