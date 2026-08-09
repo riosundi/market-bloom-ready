@@ -58,7 +58,7 @@ export const mcpCallTool = createServerFn({ method: "POST" })
         if (error) throw new Error(error.message);
 
         return {
-          content: [{ type: "text", text: `Order ${orderId} status: ${order.status}. Total: ${order.total_price}` }]
+          content: [{ type: "text", text: `Order ${orderId} status: ${order.status}. Total: ${order.total}` }]
         };
       }
 
