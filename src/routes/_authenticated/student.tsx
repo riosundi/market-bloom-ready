@@ -8,7 +8,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
-import { createOrder, getProducts, getStudentOrders } from "@/lib/orders.functions";
+import { createOrder } from "@/lib/orders.functions";
+import { getProducts, getStudentOrders } from "@/lib/products/products.functions";
 import { formatCurrency } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/student")({
@@ -36,12 +37,12 @@ function StudentDashboard() {
 
   const { data: products } = useSuspenseQuery({
     queryKey: ["products"],
-    queryFn: () => getProducts(),
+    queryFn: () => getProducts({ data: undefined }),
   });
 
   const { data: orders } = useSuspenseQuery({
     queryKey: ["student-orders"],
-    queryFn: () => getStudentOrders(),
+    queryFn: () => getStudentOrders({ data: undefined }),
   });
 
   const { addItem, items: cartItems } = useCart();

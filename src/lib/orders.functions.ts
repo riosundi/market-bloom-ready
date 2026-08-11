@@ -7,17 +7,9 @@ import { formatCurrency } from "./roles";
 
 
 
-export const getProducts = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("products")
-      .select("*, businesses(store_name)")
-      .eq("status", "active");
-
-    if (error) throw error;
-    return data;
-  });
+// Moved to src/lib/products/products.functions.ts to avoid circular dependencies and follow architecture rules.
+// keeping these as exports for backward compatibility if needed, but they should be imported from the new location.
+export { getProducts } from "./products/products.functions";
 
 export const createOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -34,7 +26,7 @@ export const createOrder = createServerFn({ method: "POST" })
         ),
         delivery_address: z.string(),
         subtotal: z.number(),
-        delivery_fee: z.number(),
+        delivery_fee: z.number().default(15),
         total: z.number(),
         business_id: z.string(),
       })
@@ -100,15 +92,5 @@ export const createOrder = createServerFn({ method: "POST" })
     return order;
   });
 
-export const getStudentOrders = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("orders")
-      .select("*, order_items(*)")
-      .eq("student_id", context.userId)
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-    return data;
-  });
+// Moved to products.functions.ts
+export { getStudentOrders } from "./products/products.functions";

@@ -177,6 +177,7 @@ export type Database = {
           image_url: string | null
           is_popular: boolean
           is_trending: boolean
+          location: string | null
           name: string
           price: number
           rating: number
@@ -194,6 +195,7 @@ export type Database = {
           image_url?: string | null
           is_popular?: boolean
           is_trending?: boolean
+          location?: string | null
           name: string
           price?: number
           rating?: number
@@ -211,6 +213,7 @@ export type Database = {
           image_url?: string | null
           is_popular?: boolean
           is_trending?: boolean
+          location?: string | null
           name?: string
           price?: number
           rating?: number
