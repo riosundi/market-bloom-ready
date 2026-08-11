@@ -1,7 +1,7 @@
 import { useServerFn } from "@tanstack/react-start";
 import { Link, useNavigate, createFileRoute } from "@tanstack/react-router";
 import { CreditCard, MapPin, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/app-shell";
@@ -21,66 +21,23 @@ export const Route = createFileRoute("/_authenticated/checkout")({
 });
 
 function CheckoutPage() {
-  const { items, total, removeItem, clearCart } = useCart();
   const navigate = useNavigate();
-  const createOrderFn = useServerFn(createOrder);
-  const [address, setAddress] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const subtotal = total();
-  const grandTotal = subtotal + DELIVERY_FEE;
+  useEffect(() => {
+    toast.info("Checkout is handled via Shopify Cart.");
+    void navigate({ to: "/student" });
+  }, [navigate]);
 
-  const handleCheckout = async () => {
-    if (!address) {
-      toast.error("Please enter a delivery address");
-      return;
-    }
-
-    if (items.length === 0) {
-      toast.error("Your cart is empty");
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      // Assuming all items from same business for now as MVP
-      // In a real app, we'd group items by business and create multiple orders
-      const businessId = items[0]?.business_id;
-
-      await createOrderFn({
-        data: {
-          items: items.map((i) => ({
-            product_id: i.id,
-            name: i.name,
-            price: i.price,
-            quantity: i.quantity,
-          })),
-          business_id: businessId,
-          delivery_address: address,
-          subtotal,
-          delivery_fee: DELIVERY_FEE,
-          total: grandTotal,
-        },
-      });
-
-      toast.success("Order placed successfully!");
-      clearCart();
-      void navigate({ to: "/orders" });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to place order. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  return null;
+}
 
   if (items.length === 0) {
     return (
-      <AppShell title="Checkout" subtitle="Your cart is empty.">
+      <AppShell title="Checkout" subtitle="Redirecting to secure payment...">
         <div className="rounded-2xl border bg-card p-12 text-center">
-          <p className="text-muted-foreground">Go back to the marketplace to add items.</p>
+          <p className="text-muted-foreground">Please use the Shopify Cart to complete your purchase.</p>
           <Button asChild className="mt-4">
-            <Link to="/student">Browse Products</Link>
+            <Link to="/student">Return to Marketplace</Link>
           </Button>
         </div>
       </AppShell>
