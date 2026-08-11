@@ -25,18 +25,21 @@ export function dashboardPath(role: Role | null | undefined): string {
 export const CATEGORIES = [
   "Food",
   "Groceries",
-  "Study Materials",
   "Electronics",
   "Fashion",
+  "Beauty",
+  "Campus Essentials",
+  "Drinks",
+  "Services",
+  "Study Materials",
 ] as const;
 
-export const DELIVERY_FEE = 500;
+export const DELIVERY_FEE = 15; // K15 delivery fee as example
 export const COMMISSION_RATE = 0.1;
 
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return `K${new Intl.NumberFormat("en-ZM", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount)}`;
 }
