@@ -9,6 +9,7 @@ import {
 
 export const getProducts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
+  .validator((data: any) => data)
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("products")
@@ -56,6 +57,7 @@ export const getAgentOrders = createServerFn({ method: "GET" })
 
 export const getStudentOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
+  .validator((data: any) => data)
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("orders")

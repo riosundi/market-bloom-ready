@@ -37,12 +37,12 @@ function StudentDashboard() {
 
   const { data: products } = useSuspenseQuery({
     queryKey: ["products"],
-    queryFn: () => getProducts(undefined as any),
+    queryFn: () => getProducts({ data: undefined }),
   });
 
   const { data: orders } = useSuspenseQuery({
     queryKey: ["student-orders"],
-    queryFn: () => getStudentOrders(),
+    queryFn: () => getStudentOrders({ data: undefined }),
   });
 
   const { addItem, items: cartItems } = useCart();
