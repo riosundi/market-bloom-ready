@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { cn } from "@/lib/utils";
 import { dashboardPath, SIGNUP_ROLES, type Role } from "@/lib/roles";
+import { sendWelcomeEmail } from "@/lib/email/resend.functions";
+
 
 const searchSchema = z.object({
   mode: z.enum(["login", "register", "forgot"]).default("login").catch("login"),
