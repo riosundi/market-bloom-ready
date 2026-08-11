@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { cn } from "@/lib/utils";
 import { dashboardPath, SIGNUP_ROLES, type Role } from "@/lib/roles";
+import { sendWelcomeEmail } from "@/lib/email/resend.functions";
+
 
 const searchSchema = z.object({
   mode: z.enum(["login", "register", "forgot"]).default("login").catch("login"),
@@ -136,6 +138,19 @@ function AuthPage() {
       toast.success("Check your email to confirm your account.");
       return;
     }
+
+    // Trigger welcome email for immediate session (OTP/Auto-confirm)
+    try {
+      await sendWelcomeEmail({
+        data: {
+          email: parsed.data.email,
+          userName: parsed.data.full_name,
+        },
+      });
+    } catch (e) {
+      console.error("Welcome email error:", e);
+    }
+
     toast.success("Account created!");
   }
 

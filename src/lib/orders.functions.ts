@@ -1,6 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { sendOrderConfirmation } from "./email/resend.functions";
+import { formatCurrency } from "./roles";
+
+
+
 
 export const getProducts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -66,6 +71,31 @@ export const createOrder = createServerFn({ method: "POST" })
     );
 
     if (itemsError) throw itemsError;
+
+    // Trigger confirmation email
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", userId)
+        .single();
+
+      // In production, email is retrieved from auth.users (server-only)
+      const userEmail = "customer@tileta.app"; 
+
+      await sendOrderConfirmation({
+        data: {
+          email: userEmail,
+          userName: profile?.full_name || "Customer",
+          orderNumber: order.id.slice(0, 8).toUpperCase(),
+          total: data.total,
+          deliveryAddress: data.delivery_address,
+          items: data.items,
+        },
+      });
+    } catch (emailError) {
+      console.error("Failed to send confirmation email:", emailError);
+    }
 
     return order;
   });
