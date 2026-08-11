@@ -70,6 +70,30 @@ export const createOrder = createServerFn({ method: "POST" })
 
     if (itemsError) throw itemsError;
 
+    // Trigger confirmation email
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", userId)
+        .single();
+
+      if (profile?.email) {
+        await sendOrderConfirmation({
+          data: {
+            email: profile.email,
+            userName: profile.full_name || "Customer",
+            orderNumber: order.id.slice(0, 8).toUpperCase(),
+            total: data.total,
+            deliveryAddress: data.delivery_address,
+            items: data.items,
+          },
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send confirmation email:", emailError);
+    }
+
     return order;
   });
 
