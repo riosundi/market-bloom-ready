@@ -4,8 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { sendOrderConfirmation } from "./email/resend.functions";
 import { formatCurrency } from "./roles";
 
-import { sendOrderConfirmation } from "./email/resend.functions";
-import { formatCurrency } from "./roles";
+
 
 
 export const getProducts = createServerFn({ method: "GET" })
