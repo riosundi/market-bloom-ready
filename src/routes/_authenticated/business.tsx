@@ -46,10 +46,10 @@ function BusinessDashboard() {
   return (
     <AppShell
       title="Seller dashboard"
-      subtitle="Your products, orders and store performance."
+      subtitle="Manage your products and orders directly on Shopify."
       actions={
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> Add Product
+        <Button onClick={() => window.open('https://admin.shopify.com', '_blank')}>
+          <Plus className="mr-2 h-4 w-4" /> Go to Shopify Admin
         </Button>
       }
     >
@@ -92,12 +92,18 @@ function BusinessDashboard() {
             </table>
           </div>
         ) : (
-          <div className="rounded-2xl border bg-card p-8 text-center">
-            <ShoppingBag className="mx-auto h-10 w-10 text-muted-foreground" />
-            <p className="mt-4 font-semibold">No orders yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              When customers buy your products, they will show up here.
+          <div className="rounded-2xl border bg-card p-12 text-center">
+            <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-xl font-bold">Manage Store on Shopify</h3>
+            <p className="mt-2 text-muted-foreground max-w-md mx-auto">
+              Your store data is now synchronized with Shopify. Visit your Shopify Admin panel to manage products, inventory, and fulfill orders.
             </p>
+            <Button 
+              className="mt-6 rounded-full px-8" 
+              onClick={() => window.open('https://admin.shopify.com', '_blank')}
+            >
+              Open Shopify Admin
+            </Button>
           </div>
         )}
       </div>
