@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { CartDrawer } from "@/components/cart-drawer";
 
 export function AppShell({
   title,
@@ -48,6 +49,7 @@ export function AppShell({
                 <span className="hidden sm:inline">My Orders</span>
               </Link>
             </Button>
+            <CartDrawer />
             {actions}
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-destructive hover:bg-destructive/10">
               <LogOut className="mr-0 h-4 w-4 sm:mr-2" />

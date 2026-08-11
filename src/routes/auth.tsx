@@ -123,7 +123,7 @@ function AuthPage() {
       password: parsed.data.password,
       options: {
         emailRedirectTo: window.location.origin,
-        data: { full_name: parsed.data.full_name, role: parsed.data.role, wallet_balance: 10000 },
+        data: { full_name: parsed.data.full_name, role: parsed.data.role, wallet_balance: 0 },
       },
     });
     setPending(false);
