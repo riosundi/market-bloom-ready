@@ -138,6 +138,19 @@ function AuthPage() {
       toast.success("Check your email to confirm your account.");
       return;
     }
+
+    // Trigger welcome email for immediate session (OTP/Auto-confirm)
+    try {
+      await sendWelcomeEmail({
+        data: {
+          email: parsed.data.email,
+          userName: parsed.data.full_name,
+        },
+      });
+    } catch (e) {
+      console.error("Welcome email error:", e);
+    }
+
     toast.success("Account created!");
   }
 
