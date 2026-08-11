@@ -29,7 +29,7 @@ function AgentDashboard() {
 
   const { data: orders } = useSuspenseQuery({
     queryKey: ["agent-orders", profile?.id],
-    queryFn: () => getAgentOrders({ data: { agentId: profile?.id || "" } }),
+    queryFn: () => getAgentOrders({ agentId: profile?.id || "" }),
   });
 
   const activeDeliveries = orders?.filter((o: any) => o.status === "dispatched").length || 0;

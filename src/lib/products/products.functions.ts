@@ -42,14 +42,14 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
 
 export const getSellerOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { businessId: string }) => data)
+  .inputValidator((data) => z.object({ businessId: z.string() }).parse(data))
   .handler(async ({ data }) => {
     return fetchSellerOrders(data.businessId);
   });
 
 export const getAgentOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { agentId: string }) => data)
+  .inputValidator((data) => z.object({ agentId: z.string() }).parse(data))
   .handler(async ({ data }) => {
     return fetchAgentOrders(data.agentId);
   });
