@@ -168,7 +168,7 @@ function CheckoutPage() {
               {isSubmitting ? "Processing..." : `Pay ${formatCurrency(grandTotal)}`}
             </Button>
             <p className="text-[10px] text-center text-muted-foreground mt-4">
-              By clicking pay, you agree to TILETA's terms of service. Secure payment via wallet.
+              By clicking pay, you agree to TILETA's terms of service. Secure payment via wallet. (Prices in Zambian Kwacha)
             </p>
           </div>
         </div>

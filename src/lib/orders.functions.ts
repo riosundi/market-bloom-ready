@@ -26,7 +26,7 @@ export const createOrder = createServerFn({ method: "POST" })
         ),
         delivery_address: z.string(),
         subtotal: z.number(),
-        delivery_fee: z.number(),
+        delivery_fee: z.number().default(15),
         total: z.number(),
         business_id: z.string(),
       })
