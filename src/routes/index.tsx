@@ -263,7 +263,7 @@ function Index() {
               <p className="mt-4 text-xl font-semibold">{r.title}</p>
               <p className="mt-2 flex-1 text-muted-foreground">{r.desc}</p>
               <Button variant="outline" className="mt-5 justify-between" asChild>
-                <Link to="/auth" search={{ mode: "register", role: r.role }}>
+                <Link to="/auth" search={{ mode: "register", role: r.role as any }}>
                   {r.cta} <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
