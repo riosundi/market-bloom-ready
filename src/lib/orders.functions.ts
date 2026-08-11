@@ -7,17 +7,9 @@ import { formatCurrency } from "./roles";
 
 
 
-export const getProducts = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("products")
-      .select("*, businesses(store_name)")
-      .eq("status", "active");
-
-    if (error) throw error;
-    return data;
-  });
+// Moved to src/lib/products/products.functions.ts to avoid circular dependencies and follow architecture rules.
+// keeping these as exports for backward compatibility if needed, but they should be imported from the new location.
+export { getProducts } from "./products/products.functions";
 
 export const createOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
