@@ -38,7 +38,7 @@ function BusinessDashboard() {
 
   const { data: orders } = useSuspenseQuery({
     queryKey: ["seller-orders", businessId],
-    queryFn: () => getSellerOrders({ businessId }),
+    queryFn: () => getSellerOrders({ data: { businessId } }),
   });
 
   const totalRevenue = orders?.reduce((sum: number, o: any) => sum + (o.total || 0), 0) || 0;
