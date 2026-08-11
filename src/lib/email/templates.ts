@@ -13,7 +13,7 @@ export interface OrderEmailData extends BaseEmailData {
   orderNumber: string;
   total: string;
   status?: string;
-  items?: Array<{ name: string; quantity: number; price: string }>;
+  items?: Array<{ name: string; quantity: number; price: string | number }>;
   deliveryAddress?: string;
   businessName?: string;
 }
@@ -47,7 +47,7 @@ Order Summary:
 Total: ${data.total}
 Delivery Address: ${data.deliveryAddress}
 
-${data.items ? `Items:\n${data.items.map(i => `- ${i.name} x${i.quantity} (${i.price})`).join('\n')}` : ''}
+${data.items ? `Items:\n${data.items.map(i => `- ${i.name} x${i.quantity} (${typeof i.price === 'number' ? i.price + ' NGN' : i.price})`).join('\n')}` : ''}
 
 We'll notify you when your order is accepted and on its way.
 
@@ -111,5 +111,19 @@ Please log in to your seller dashboard to accept and process this order.
 
 ${EMAIL_SIGNATURE}
     `.trim(),
+  }),
+
+  loginAlert: (data: BaseEmailData & { time: string; device: string }) => ({
+    subject: "New Login Alert",
+    body: `
+Hello ${data.userName},
+
+We detected a new login to your Tileta account at ${data.time} on device ${data.device}.
+
+If this wasn't you, please change your password immediately.
+
+${EMAIL_SIGNATURE}
+    `.trim(),
   })
 };
+
