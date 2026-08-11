@@ -42,14 +42,28 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
 
 export const getSellerOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({ businessId: z.string() }).parse(data))
+  .validator((data: { businessId: string }) => data)
   .handler(async ({ data }) => {
     return fetchSellerOrders(data.businessId);
   });
 
 export const getAgentOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({ agentId: z.string() }).parse(data))
+  .validator((data: { agentId: string }) => data)
   .handler(async ({ data }) => {
     return fetchAgentOrders(data.agentId);
   });
+
+export const getStudentOrders = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("orders")
+      .select("*, order_items(*)")
+      .eq("student_id", context.userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data;
+  });
+

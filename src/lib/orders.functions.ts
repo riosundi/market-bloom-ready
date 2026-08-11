@@ -92,15 +92,5 @@ export const createOrder = createServerFn({ method: "POST" })
     return order;
   });
 
-export const getStudentOrders = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("orders")
-      .select("*, order_items(*)")
-      .eq("student_id", context.userId)
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-    return data;
-  });
+// Moved to products.functions.ts
+export { getStudentOrders } from "./products/products.functions";
