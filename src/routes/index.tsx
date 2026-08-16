@@ -146,7 +146,7 @@ function Index() {
           <div className="animate-float-up">
             <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-              The Smart Campus Marketplace
+              The Smart World Wide Marketplace
             </span>
             <h1 className="mt-5 text-balance text-4xl font-bold leading-tight tracking-tight md:text-6xl">
               Everything on campus,{" "}
