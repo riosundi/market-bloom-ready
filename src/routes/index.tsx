@@ -25,13 +25,13 @@ import logoAsset from "@/assets/tileta-3d-logo.png.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "TILETA — Smart Campus Marketplace for Students" },
+      { title: "TILETA — The Smart World Wide Marketplace" },
       {
         name: "description",
         content:
           "Order food, groceries, books, and electronics from campus stores. Fast student delivery and secure payments with TILETA - the smart marketplace for students.",
       },
-      { property: "og:title", content: "TILETA — The Smart Campus Marketplace" },
+      { property: "og:title", content: "TILETA — The Smart World Wide Marketplace" },
       {
         property: "og:description",
         content:
@@ -146,15 +146,15 @@ function Index() {
           <div className="animate-float-up">
             <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-              The Smart Campus Marketplace
+              The Smart World Wide Marketplace
             </span>
             <h1 className="mt-5 text-balance text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-              Everything on campus,{" "}
-              <span className="brand-gradient-text">delivered to your door.</span>
+              Everything you need,{" "}
+              <span className="brand-gradient-text">delivered world wide.</span>
             </h1>
             <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-muted-foreground">
               Order food, groceries, study materials, electronics and fashion from trusted
-              campus businesses. Paid securely, delivered by fellow students.
+              global businesses. Paid securely, delivered to your doorstep.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild>
@@ -228,7 +228,7 @@ function Index() {
       <section id="categories" className="mx-auto max-w-6xl px-4 py-16">
         <h2 className="text-balance text-2xl font-bold md:text-3xl">Shop by category</h2>
         <p className="mt-2 text-muted-foreground">
-          Everything a student needs, in one place.
+          Everything you need, in one place.
         </p>
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-5">
           {categories.map((c) => (
