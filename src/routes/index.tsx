@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { dashboardPath } from "@/lib/roles";
 import adAsset from "@/assets/tileta-ad.mp4.asset.json";
+import logoAsset from "@/assets/tileta-3d-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -184,18 +185,31 @@ function Index() {
           </div>
           <div className="relative animate-float-up">
             <div className="brand-gradient absolute -inset-4 rounded-[2rem] opacity-20 blur-2xl" />
-            <div className="relative aspect-video overflow-hidden rounded-3xl border bg-black shadow-2xl md:aspect-square lg:aspect-video">
-              <video
-                src={adAsset.url}
-                className="h-full w-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png"
-              />
-              <div className="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-lg">
-                <Logo />
+            <div className="relative grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
+              <div className="relative aspect-video overflow-hidden rounded-3xl border bg-black shadow-2xl">
+                <video
+                  src={adAsset.url}
+                  className="h-full w-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <div className="glass relative overflow-hidden rounded-3xl border p-8 shadow-2xl">
+                  <div className="brand-gradient absolute -inset-4 opacity-5 blur-xl" />
+                  <img 
+                    src={logoAsset.url} 
+                    alt="TILETA Official Mark" 
+                    className="relative mx-auto h-64 w-64 object-contain drop-shadow-2xl"
+                  />
+                  <div className="relative mt-4 text-center">
+                    <p className="text-sm font-semibold tracking-widest text-primary uppercase">Official Product</p>
+                    <p className="text-xs text-muted-foreground mt-1">FOZZIEL ENTERPRISE</p>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="glass absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border p-4 shadow-xl sm:flex">

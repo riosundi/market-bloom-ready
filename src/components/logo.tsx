@@ -1,5 +1,6 @@
+import { ShoppingBag } from "lucide-react";
+
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/tileta-3d-logo.png.asset.json";
 
 export function Logo({
   className,
@@ -10,12 +11,8 @@ export function Logo({
 }) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white/10 shadow-lg ring-1 ring-white/20">
-        <img 
-          src={logoAsset.url} 
-          alt="TILETA Logo" 
-          className="h-full w-full object-cover p-0.5"
-        />
+      <div className="brand-gradient flex h-9 w-9 items-center justify-center rounded-xl shadow-lg shadow-primary/30">
+        <ShoppingBag className="h-5 w-5 text-primary-foreground" strokeWidth={2.4} />
       </div>
       {showText && (
         <span className="text-xl font-bold tracking-tight">
