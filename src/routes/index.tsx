@@ -293,7 +293,10 @@ function Index() {
 
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-muted-foreground md:flex-row">
-          <Logo />
+          <div className="flex flex-col items-center gap-2 md:items-start">
+            <Logo />
+            <p className="text-xs opacity-75">FOZZIEL ENTERPRISE</p>
+          </div>
           <p>{`© ${new Date().getFullYear()} TILETA. The Smart Campus Marketplace.`}</p>
         </div>
       </footer>
