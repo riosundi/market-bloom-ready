@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
   Bike,
@@ -13,12 +14,15 @@ import {
   Store,
   UtensilsCrossed,
   Wallet,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { dashboardPath } from "@/lib/roles";
+import { dashboardPath, formatCurrency } from "@/lib/roles";
+import { storefrontApiRequest, type ShopifyProduct } from "@/lib/shopify";
 import adAsset from "@/assets/tileta-ad.mp4.asset.json";
 import logoAsset from "@/assets/tileta-3d-logo.png.asset.json";
 
@@ -98,6 +102,41 @@ const steps = [
 
 function Index() {
   const { session, role, loading } = useAuth();
+
+  const { data: catalogProducts, isLoading: catalogLoading, error: catalogError } = useQuery({
+    queryKey: ["landing-catalog"],
+    queryFn: async () => {
+      const data = await storefrontApiRequest(`
+        query GetLandingCatalog {
+          products(first: 8) {
+            edges {
+              node {
+                id
+                title
+                description
+                handle
+                priceRange {
+                  minVariantPrice {
+                    amount
+                    currencyCode
+                  }
+                }
+                images(first: 1) {
+                  edges {
+                    node {
+                      url
+                      altText
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `);
+      return data?.data?.products?.edges || [];
+    },
+  });
 
   return (
     <div className="min-h-screen">
@@ -247,6 +286,97 @@ function Index() {
           ))}
         </div>
       </section>
+
+      {/* Product Catalog */}
+      <section id="catalog" className="border-t bg-card/30">
+        <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="flex flex-col items-center text-center mb-12">
+            <h2 className="text-balance text-3xl font-bold md:text-4xl">Featured Catalog</h2>
+            <p className="mt-4 max-w-2xl text-muted-foreground text-lg">
+              Explore a sample of our world-wide marketplace. High-quality products from trusted global businesses.
+            </p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {catalogLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-[400px] animate-pulse rounded-3xl bg-muted" />
+              ))
+            ) : catalogError ? (
+              <div className="col-span-full flex flex-col items-center justify-center py-12 text-center glass rounded-3xl border border-destructive/20">
+                <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+                <h3 className="text-xl font-bold">Failed to load catalog</h3>
+                <p className="text-muted-foreground mt-2">We couldn't reach the marketplace right now.</p>
+              </div>
+            ) : catalogProducts?.length === 0 ? (
+              <div className="col-span-full py-20 text-center glass rounded-3xl border border-dashed">
+                <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground opacity-50 mb-4" />
+                <h3 className="text-xl font-bold">Catalog is being updated</h3>
+                <p className="text-muted-foreground mt-2">New products are arriving soon.</p>
+              </div>
+            ) : (
+              catalogProducts?.map((product: ShopifyProduct) => (
+                <div
+                  key={product.node.id}
+                  className="group relative flex flex-col overflow-hidden rounded-3xl border bg-card/50 backdrop-blur-sm transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                    {product.node.images.edges[0]?.node ? (
+                      <img
+                        src={product.node.images.edges[0].node.url}
+                        alt={product.node.images.edges[0].node.altText || product.node.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                        No image
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                      <Button className="w-full brand-gradient border-none" asChild>
+                        <Link to="/auth" search={{ mode: "register" }}>
+                          View Details
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        Featured
+                      </span>
+                      <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                        <Star className="h-3 w-3 fill-primary text-primary" />
+                        4.9
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold truncate leading-tight">{product.node.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                      {product.node.description || "Premium quality product available for world-wide delivery."}
+                    </p>
+                    <div className="mt-6 flex items-center justify-between">
+                      <span className="text-xl font-black text-foreground">
+                        {formatCurrency(parseFloat(product.node.priceRange.minVariantPrice.amount))}
+                      </span>
+                      <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+                        ZMW
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          
+          <div className="mt-16 text-center">
+            <Button variant="outline" size="lg" className="rounded-full px-10 h-14 text-base font-bold border-2 hover:bg-primary hover:text-primary-foreground transition-all" asChild>
+              <Link to="/auth" search={{ mode: "register" }}>
+                View Full Marketplace <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+        </div>
 
       {/* How it works */}
       <section id="how" className="border-y bg-card/50">
