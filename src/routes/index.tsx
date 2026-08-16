@@ -228,7 +228,7 @@ function Index() {
       <section id="categories" className="mx-auto max-w-6xl px-4 py-16">
         <h2 className="text-balance text-2xl font-bold md:text-3xl">Shop by category</h2>
         <p className="mt-2 text-muted-foreground">
-          Everything a student needs, in one place.
+          Everything you need, in one place.
         </p>
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-5">
           {categories.map((c) => (
