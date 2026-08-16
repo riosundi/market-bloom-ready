@@ -203,7 +203,7 @@ function Index() {
                   <img 
                     src={logoAsset.url} 
                     alt="TILETA Official Mark" 
-                    className="relative mx-auto h-64 w-64 object-contain drop-shadow-2xl"
+                    className="relative mx-auto h-80 w-80 scale-110 object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
                   />
                   <div className="relative mt-4 text-center">
                     <p className="text-sm font-semibold tracking-widest text-primary uppercase">Official Product</p>
