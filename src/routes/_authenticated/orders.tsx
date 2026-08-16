@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_authenticated/orders")({
 function OrdersPage() {
   const { data: orders } = useSuspenseQuery({
     queryKey: ["student-orders"],
-    queryFn: () => getStudentOrders(),
+    queryFn: () => getStudentOrders({ data: undefined }),
   });
 
   return (
