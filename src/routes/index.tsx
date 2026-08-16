@@ -19,6 +19,7 @@ import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { dashboardPath } from "@/lib/roles";
+import adAsset from "@/assets/tileta-ad.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
