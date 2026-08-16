@@ -185,8 +185,21 @@ function Index() {
           </div>
           <div className="relative animate-float-up">
             <div className="brand-gradient absolute -inset-4 rounded-[2rem] opacity-20 blur-2xl" />
-            <div className="relative grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-              <div className="relative aspect-video overflow-hidden rounded-3xl border bg-black shadow-2xl">
+            <div className="relative flex flex-col gap-8">
+              <div className="glass relative overflow-hidden rounded-[2.5rem] border p-12 shadow-2xl">
+                <div className="brand-gradient absolute -inset-10 opacity-10 blur-3xl" />
+                <img 
+                  src={logoAsset.url} 
+                  alt="TILETA Official Mark" 
+                  className="relative mx-auto h-[450px] w-full max-w-[450px] scale-125 object-contain drop-shadow-[0_35px_60px_rgba(0,0,0,0.4)] transition-transform duration-700 hover:scale-130"
+                />
+                <div className="relative mt-8 text-center">
+                  <p className="text-lg font-bold tracking-[0.2em] text-primary uppercase">Official Identity</p>
+                  <p className="text-sm font-medium text-muted-foreground mt-2 opacity-60">FOZZIEL ENTERPRISE • 2026</p>
+                </div>
+              </div>
+              
+              <div className="relative aspect-video overflow-hidden rounded-[2rem] border bg-black shadow-xl md:mx-auto md:w-4/5">
                 <video
                   src={adAsset.url}
                   className="h-full w-full object-cover"
@@ -196,20 +209,6 @@ function Index() {
                   playsInline
                   poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png"
                 />
-              </div>
-              <div className="flex flex-col justify-center">
-                <div className="glass relative overflow-hidden rounded-3xl border p-8 shadow-2xl">
-                  <div className="brand-gradient absolute -inset-4 opacity-5 blur-xl" />
-                  <img 
-                    src={logoAsset.url} 
-                    alt="TILETA Official Mark" 
-                    className="relative mx-auto h-80 w-80 scale-110 object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
-                  />
-                  <div className="relative mt-4 text-center">
-                    <p className="text-sm font-semibold tracking-widest text-primary uppercase">Official Product</p>
-                    <p className="text-xs text-muted-foreground mt-1">FOZZIEL ENTERPRISE</p>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="glass absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border p-4 shadow-xl sm:flex">
