@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
-import { getStudentOrders } from "@/lib/products/products.functions";
+import { getStudentOrders } from "@/lib/orders.functions";
 import { formatCurrency } from "@/lib/roles";
 import { useShopifyCartStore } from "@/stores/shopify-cart";
 import { storefrontApiRequest, type ShopifyProduct } from "@/lib/shopify";
