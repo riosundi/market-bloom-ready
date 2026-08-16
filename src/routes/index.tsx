@@ -299,9 +299,15 @@ function Index() {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-muted-foreground md:flex-row">
           <div className="flex flex-col items-center gap-2 md:items-start">
             <Logo />
-            <p className="text-xs opacity-75">FOZZIEL ENTERPRISE</p>
+            <div className="flex flex-col items-center gap-1 md:items-start">
+              <p className="text-xs font-semibold tracking-wider text-primary">FOZZIEL ENTERPRISE</p>
+              <p className="text-[10px] uppercase opacity-60">Empowering Campus Commerce</p>
+            </div>
           </div>
-          <p>{`© ${new Date().getFullYear()} TILETA. The Smart Campus Marketplace.`}</p>
+          <div className="flex flex-col items-center gap-1 md:items-end">
+            <p className="font-medium text-foreground">© 2026 TILETA</p>
+            <p className="text-[10px] opacity-60">Official Product of Fozziel Enterprise</p>
+          </div>
         </div>
       </footer>
     </div>
