@@ -11,7 +11,8 @@ export const getProducts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .validator((data: any) => data)
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { supabase } = context;
+    const { data, error } = await supabase
       .from("products")
       .select("*, businesses(store_name)")
       .eq("status", "active");
@@ -55,17 +56,4 @@ export const getAgentOrders = createServerFn({ method: "GET" })
     return fetchAgentOrders(data.agentId);
   });
 
-export const getStudentOrders = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .validator((data: any) => data)
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("orders")
-      .select("*, order_items(*)")
-      .eq("student_id", context.userId)
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-    return data;
-  });
 
