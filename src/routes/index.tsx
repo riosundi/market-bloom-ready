@@ -154,7 +154,7 @@ function Index() {
             </h1>
             <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-muted-foreground">
               Order food, groceries, study materials, electronics and fashion from trusted
-              campus businesses. Paid securely, delivered by fellow students.
+              global businesses. Paid securely, delivered to your doorstep.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild>
