@@ -1,7 +1,8 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export async function updateOrderStatus(orderId: string, status: string) {
-  const { data, error } = await supabase
+  const admin = await supabaseAdmin();
+  const { data, error } = await admin
     .from("orders")
     .update({ status, updated_at: new Date().toISOString() })
     .eq("id", orderId)
@@ -13,7 +14,8 @@ export async function updateOrderStatus(orderId: string, status: string) {
 }
 
 export async function getSellerOrders(businessId: string) {
-  const { data, error } = await supabase
+  const admin = await supabaseAdmin();
+  const { data, error } = await admin
     .from("orders")
     .select("*, order_items(*)")
     .eq("business_id", businessId)
@@ -24,7 +26,8 @@ export async function getSellerOrders(businessId: string) {
 }
 
 export async function getAgentOrders(agentId: string) {
-  const { data, error } = await supabase
+  const admin = await supabaseAdmin();
+  const { data, error } = await admin
     .from("orders")
     .select("*, order_items(*)")
     .eq("agent_id", agentId)
