@@ -377,6 +377,7 @@ function Index() {
             </Button>
           </div>
         </div>
+      </section>
 
       {/* How it works */}
       <section id="how" className="border-y bg-card/50">
