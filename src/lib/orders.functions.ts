@@ -2,14 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { sendOrderConfirmation } from "./email/resend.functions";
-import { formatCurrency } from "./roles";
-
-
-
-
-// Moved to src/lib/products/products.functions.ts to avoid circular dependencies and follow architecture rules.
-// keeping these as exports for backward compatibility if needed, but they should be imported from the new location.
-export { getProducts } from "./products/products.functions";
 
 export const createOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -92,5 +84,18 @@ export const createOrder = createServerFn({ method: "POST" })
     return order;
   });
 
-// Moved to products.functions.ts
-export { getStudentOrders } from "./products/products.functions";
+export const getStudentOrders = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .validator((data: any) => data)
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*, order_items(*)")
+      .eq("student_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data;
+  });
+
