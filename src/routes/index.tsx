@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
         content:
           "Order food, groceries, books, and electronics from campus stores. Fast student delivery and secure payments with TILETA - the smart marketplace for students.",
       },
-      { property: "og:title", content: "TILETA — The Smart Campus Marketplace" },
+      { property: "og:title", content: "TILETA — The Smart World Wide Marketplace" },
       {
         property: "og:description",
         content:
