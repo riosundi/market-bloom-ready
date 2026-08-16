@@ -25,7 +25,7 @@ import logoAsset from "@/assets/tileta-3d-logo.png.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "TILETA — Smart Campus Marketplace for Students" },
+      { title: "TILETA — The Smart World Wide Marketplace" },
       {
         name: "description",
         content:
