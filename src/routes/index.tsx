@@ -149,8 +149,8 @@ function Index() {
               The Smart World Wide Marketplace
             </span>
             <h1 className="mt-5 text-balance text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-              Everything on campus,{" "}
-              <span className="brand-gradient-text">delivered to your door.</span>
+              Everything you need,{" "}
+              <span className="brand-gradient-text">delivered world wide.</span>
             </h1>
             <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-muted-foreground">
               Order food, groceries, study materials, electronics and fashion from trusted
