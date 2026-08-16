@@ -194,6 +194,9 @@ function Index() {
                 playsInline
                 poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Jun%2024%2C%202026%2C%2007_36_40%20PM-MHcYrD9aIHWuVRyN7fABrcdrF4aYb3.png"
               />
+              <div className="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-lg">
+                <Logo />
+              </div>
             </div>
             <div className="glass absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border p-4 shadow-xl sm:flex">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary">
