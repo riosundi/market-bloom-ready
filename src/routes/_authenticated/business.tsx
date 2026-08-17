@@ -9,6 +9,7 @@ import { getSellerOrders, getSellerProducts, createProduct, updateProduct, delet
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getFriendlyErrorMessage } from "@/lib/supabase-errors";
 
 export const Route = createFileRoute("/_authenticated/business")({
   head: () => ({
@@ -125,9 +126,9 @@ function BusinessDashboard() {
           <AlertCircle className="h-5 w-5" />
           <div className="text-sm">
             <span className="font-bold">Dashboard Sync Issue:</span> Some data couldn't be loaded. 
-            {ordersError && " Order data is unavailable."}
-            {productsError && " Product inventory is unavailable."}
-            {categoriesError && " Category list is unavailable."}
+            {ordersError && ` Order data error: ${getFriendlyErrorMessage(ordersError)}`}
+            {productsError && ` Product inventory error: ${getFriendlyErrorMessage(productsError)}`}
+            {categoriesError && ` Category list error: ${getFriendlyErrorMessage(categoriesError)}`}
           </div>
         </div>
       )}

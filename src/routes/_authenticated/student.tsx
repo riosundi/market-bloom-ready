@@ -11,6 +11,7 @@ import { getStudentOrders } from "@/lib/orders.functions";
 import { formatCurrency } from "@/lib/roles";
 import { useShopifyCartStore } from "@/stores/shopify-cart";
 import { storefrontApiRequest, type ShopifyProduct } from "@/lib/shopify";
+import { getFriendlyErrorMessage } from "@/lib/supabase-errors";
 
 export const Route = createFileRoute("/_authenticated/student")({
   head: () => ({
@@ -139,7 +140,7 @@ function StudentDashboard() {
         <div className="mb-6 p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive">
           <AlertCircle className="h-5 w-5" />
           <div className="text-sm">
-            <span className="font-bold">Order Sync Error:</span> {ordersError instanceof Error ? ordersError.message : "Failed to load your orders. Some information may be outdated."}
+            <span className="font-bold">Order Sync Error:</span> {getFriendlyErrorMessage(ordersError)}
           </div>
         </div>
       )}

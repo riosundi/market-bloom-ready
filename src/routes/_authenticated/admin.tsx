@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/roles";
 import { getCategories, getPlatformSettings } from "@/lib/products/products.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { getFriendlyErrorMessage } from "@/lib/supabase-errors";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -93,7 +94,7 @@ function AdminDashboard() {
         <div className="mb-6 p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive">
           <AlertCircle className="h-5 w-5" />
           <div className="text-sm">
-            <span className="font-bold">Administrative Data Error:</span> Some management panels could not be populated.
+            <span className="font-bold">Administrative Data Error:</span> {getFriendlyErrorMessage(categoriesError || settingsError || statsError)}
           </div>
         </div>
       )}
