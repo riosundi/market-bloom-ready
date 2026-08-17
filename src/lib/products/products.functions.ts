@@ -4,7 +4,11 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { 
   updateOrderStatus as updateOrderInDB, 
   getSellerOrders as fetchSellerOrders,
-  getAgentOrders as fetchAgentOrders
+  getAgentOrders as fetchAgentOrders,
+  createProduct as createProductInDB,
+  updateProduct as updateProductInDB,
+  deleteProduct as deleteProductInDB,
+  getSellerProducts as fetchSellerProducts
 } from "./products.server";
 
 export const getProducts = createServerFn({ method: "GET" })
