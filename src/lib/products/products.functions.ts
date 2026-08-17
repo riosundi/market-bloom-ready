@@ -8,7 +8,11 @@ import {
   createProduct as createProductInDB,
   updateProduct as updateProductInDB,
   deleteProduct as deleteProductInDB,
-  getSellerProducts as fetchSellerProducts
+  getSellerProducts as fetchSellerProducts,
+  getCategories as fetchCategories,
+  getProductInventory as fetchProductInventory,
+  getUserTransactions as fetchUserTransactions,
+  getPlatformSettings as fetchPlatformSettings
 } from "./products.server";
 
 export const getProducts = createServerFn({ method: "GET" })
@@ -18,7 +22,7 @@ export const getProducts = createServerFn({ method: "GET" })
     const { supabase } = context;
     const { data, error } = await supabase
       .from("products")
-      .select("*, businesses(store_name)")
+      .select("*, businesses(store_name), product_images(*)")
       .eq("status", "active");
 
     if (error) throw error;
@@ -128,3 +132,27 @@ export const getSellerProducts = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     return fetchSellerProducts(data.businessId);
   });
+
+export const getCategories = createServerFn({ method: "GET" })
+  .handler(async () => {
+    return fetchCategories();
+  });
+
+export const getProductInventory = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ productId: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    return fetchProductInventory(data.productId);
+  });
+
+export const getUserTransactions = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    return fetchUserTransactions(context.userId);
+  });
+
+export const getPlatformSettings = createServerFn({ method: "GET" })
+  .handler(async () => {
+    return fetchPlatformSettings();
+  });
+

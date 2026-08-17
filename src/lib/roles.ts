@@ -22,6 +22,7 @@ export function dashboardPath(role: Role | null | undefined): string {
   }
 }
 
+/** @deprecated Use database categories from getCategories server function instead */
 export const CATEGORIES = [
   "Food",
   "Groceries",
@@ -33,6 +34,7 @@ export const CATEGORIES = [
   "Services",
   "Study Materials",
 ] as const;
+
 
 export const DELIVERY_FEE = 15; // K15 delivery fee as example
 export const COMMISSION_RATE = 0.1;

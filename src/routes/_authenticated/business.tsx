@@ -4,8 +4,8 @@ import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-q
 import { useAuth } from "@/hooks/use-auth";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
-import { formatCurrency, CATEGORIES } from "@/lib/roles";
-import { getSellerOrders, getSellerProducts, createProduct, updateProduct, deleteProduct } from "@/lib/products/products.functions";
+import { formatCurrency } from "@/lib/roles";
+import { getSellerOrders, getSellerProducts, createProduct, updateProduct, deleteProduct, getCategories } from "@/lib/products/products.functions";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -57,12 +57,19 @@ function BusinessDashboard() {
     queryFn: () => businessId ? getSellerOrders({ data: { businessId } }) : Promise.resolve([]),
   });
 
+  const { data: categories } = useSuspenseQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories(),
+  });
+
   const { data: products } = useSuspenseQuery({
     queryKey: ["seller-products", businessId],
     queryFn: () => businessId ? getSellerProducts({ data: { businessId } }) : Promise.resolve([]),
   });
 
   const createMutation = useMutation({
+
+
     mutationFn: (newProduct: any) => createProduct({ data: { ...newProduct, businessId } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seller-products"] });
@@ -121,6 +128,14 @@ function BusinessDashboard() {
       </div>
 
       <div className="mt-8 space-y-8">
+        {products?.some((p: any) => p.inventory?.[0]?.quantity <= p.inventory?.[0]?.low_stock_threshold) && (
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-600">
+            <Package className="h-5 w-5" />
+            <div className="text-sm">
+              <span className="font-bold">Low Stock Alert:</span> Some products are running low on stock. Please restock soon.
+            </div>
+          </div>
+        )}
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">Product Inventory</h2>
@@ -147,7 +162,14 @@ function BusinessDashboard() {
                     </td>
                     <td className="px-6 py-4">{product.category}</td>
                     <td className="px-6 py-4">{formatCurrency(product.price)}</td>
-                    <td className="px-6 py-4">{product.stock}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span>{product.inventory?.[0]?.quantity ?? product.stock}</span>
+                        {product.inventory?.[0]?.quantity <= product.inventory?.[0]?.low_stock_threshold && (
+                          <span className="text-[10px] text-amber-500 font-bold uppercase">Low Stock</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-6 py-4">
                       <span className={`capitalize px-2 py-1 rounded-full text-[10px] font-bold ${
                         product.status === 'active' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
@@ -214,31 +236,36 @@ function BusinessDashboard() {
       {/* Product Form Modals could be added here */}
       {isAddingProduct && (
         <ProductModal 
+          categories={categories}
           onClose={() => setIsAddingProduct(false)} 
           onSubmit={(data) => createMutation.mutate(data)}
         />
+
       )}
 
       {editingProduct && (
         <ProductModal 
           product={editingProduct}
+          categories={categories}
           onClose={() => setEditingProduct(null)} 
           onSubmit={(data) => updateMutation.mutate({ productId: editingProduct.id, updates: data })}
         />
+
       )}
     </AppShell>
   );
 }
 
-function ProductModal({ product, onClose, onSubmit }: { product?: any, onClose: () => void, onSubmit: (data: any) => void }) {
+function ProductModal({ product, categories, onClose, onSubmit }: { product?: any, categories: any[], onClose: () => void, onSubmit: (data: any) => void }) {
   const [formData, setFormData] = useState({
     name: product?.name || "",
     description: product?.description || "",
     price: product?.price || 0,
-    category: product?.category || CATEGORIES[0],
+    category: product?.category || (categories?.[0]?.name || ""),
     stock: product?.stock || 0,
     status: product?.status || "active",
   });
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
@@ -299,7 +326,7 @@ function ProductModal({ product, onClose, onSubmit }: { product?: any, onClose: 
               value={formData.category}
               onChange={(e) => setFormData({...formData, category: e.target.value})}
             >
-              {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+              {categories?.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
             </select>
           </div>
           <div>
