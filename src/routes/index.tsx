@@ -16,7 +16,9 @@ import {
   Wallet,
   Loader2,
   AlertCircle,
+  Plus,
 } from "lucide-react";
+
 
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
