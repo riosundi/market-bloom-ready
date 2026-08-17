@@ -60,4 +60,71 @@ export const getAgentOrders = createServerFn({ method: "GET" })
     return fetchAgentOrders(data.agentId);
   });
 
+export const createProduct = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) =>
+    z.object({
+      businessId: z.string(),
+      name: z.string(),
+      description: z.string().optional(),
+      price: z.number(),
+      imageUrl: z.string().optional(),
+      category: z.string(),
+      stock: z.number(),
+      status: z.string().optional(),
+    }).parse(data)
+  )
+  .handler(async ({ data }) => {
+    return createProductInDB({
+      business_id: data.businessId,
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      image_url: data.imageUrl,
+      category: data.category,
+      stock: data.stock,
+      status: data.status,
+    });
+  });
 
+export const updateProduct = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) =>
+    z.object({
+      productId: z.string(),
+      updates: z.object({
+        name: z.string().optional(),
+        description: z.string().optional(),
+        price: z.number().optional(),
+        imageUrl: z.string().optional(),
+        category: z.string().optional(),
+        stock: z.number().optional(),
+        status: z.string().optional(),
+      }),
+    }).parse(data)
+  )
+  .handler(async ({ data }) => {
+    return updateProductInDB(data.productId, {
+      name: data.updates.name,
+      description: data.updates.description,
+      price: data.updates.price,
+      image_url: data.updates.imageUrl,
+      category: data.updates.category,
+      stock: data.updates.stock,
+      status: data.updates.status,
+    });
+  });
+
+export const deleteProduct = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ productId: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    return deleteProductInDB(data.productId);
+  });
+
+export const getSellerProducts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ businessId: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    return fetchSellerProducts(data.businessId);
+  });
