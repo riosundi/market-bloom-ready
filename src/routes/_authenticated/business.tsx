@@ -55,13 +55,11 @@ function BusinessDashboard() {
   const { data: orders } = useSuspenseQuery({
     queryKey: ["seller-orders", businessId],
     queryFn: () => businessId ? getSellerOrders({ data: { businessId } }) : Promise.resolve([]),
-    enabled: !!businessId,
   });
 
   const { data: products } = useSuspenseQuery({
     queryKey: ["seller-products", businessId],
     queryFn: () => businessId ? getSellerProducts({ data: { businessId } }) : Promise.resolve([]),
-    enabled: !!businessId,
   });
 
   const createMutation = useMutation({

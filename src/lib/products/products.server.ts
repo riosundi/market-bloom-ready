@@ -37,12 +37,12 @@ export async function getAgentOrders(agentId: string) {
 export async function createProduct(product: {
   business_id: string;
   name: string;
-  description?: string;
+  description?: string | null;
   price: number;
-  image_url?: string;
+  image_url?: string | null;
   category: string;
   stock: number;
-  status?: string;
+  status?: string | null;
 }) {
   const { data, error } = await supabaseAdmin
     .from("products")
@@ -64,13 +64,13 @@ export async function createProduct(product: {
 export async function updateProduct(
   productId: string,
   updates: Partial<{
-    name: string;
-    description: string;
-    price: number;
-    image_url: string;
-    category: string;
-    stock: number;
-    status: string;
+    name: string | null;
+    description: string | null;
+    price: number | null;
+    image_url: string | null;
+    category: string | null;
+    stock: number | null;
+    status: string | null;
   }>
 ) {
   const { data, error } = await supabaseAdmin
