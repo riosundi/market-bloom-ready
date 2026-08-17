@@ -115,7 +115,7 @@ function Index() {
           .from("products")
           .select("*, product_images(*)")
           .eq("status", "active")
-          .limit(20);
+          .limit(100);
         
         if (internalProducts && internalProducts.length > 0) {
           return internalProducts.map(p => ({
@@ -144,7 +144,7 @@ function Index() {
       // Fallback to Shopify if no internal products
       const data = await storefrontApiRequest(`
         query GetLandingCatalog {
-          products(first: 20) {
+          products(first: 100) {
             edges {
               node {
                 id
@@ -329,7 +329,7 @@ function Index() {
       <section id="catalog" className="border-t bg-card/30">
         <div className="mx-auto max-w-6xl px-4 py-20">
           <div className="flex flex-col items-center text-center mb-12">
-            <h2 className="text-balance text-3xl font-bold md:text-4xl">Featured Catalog</h2>
+            <h2 className="text-balance text-3xl font-bold md:text-4xl">500+ Premium Products</h2>
             <p className="mt-4 max-w-2xl text-muted-foreground text-lg">
               Explore a sample of our world-wide marketplace. High-quality products from trusted global businesses.
             </p>
