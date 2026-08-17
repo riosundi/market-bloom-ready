@@ -19,6 +19,7 @@ import {
   Plus,
 } from "lucide-react";
 
+import { supabase } from "@/integrations/supabase/client";
 
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -108,6 +109,38 @@ function Index() {
   const { data: catalogProducts, isLoading: catalogLoading, error: catalogError } = useQuery({
     queryKey: ["landing-catalog"],
     queryFn: async () => {
+      // First try to fetch internal products as they are most relevant for campus
+      try {
+        const { data: internalProducts } = await supabase
+          .from("products")
+          .select("*, product_images(*)")
+          .eq("status", "active")
+          .limit(8);
+        
+        if (internalProducts && internalProducts.length > 0) {
+          return internalProducts.map(p => ({
+            node: {
+              id: p.id,
+              title: p.name,
+              description: p.description,
+              handle: p.id,
+              priceRange: {
+                minVariantPrice: {
+                  amount: p.price.toString(),
+                  currencyCode: "ZMW"
+                }
+              },
+              images: {
+                edges: p.product_images?.[0] ? [{ node: { url: p.product_images[0].image_url, altText: p.name } }] : []
+              }
+            }
+          })) as any[];
+        }
+      } catch (err) {
+        console.error("Internal product fetch failed:", err);
+      }
+
+      // Fallback to Shopify if no internal products
       const data = await storefrontApiRequest(`
         query GetLandingCatalog {
           products(first: 8) {
@@ -139,6 +172,7 @@ function Index() {
       return data?.data?.products?.edges || [];
     },
   });
+
 
   return (
     <div className="min-h-screen">
