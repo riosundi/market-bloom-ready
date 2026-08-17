@@ -16,6 +16,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getFriendlyErrorMessage } from "@/lib/supabase-errors";
 
 function NotFoundComponent() {
   return (
@@ -47,10 +48,7 @@ function ErrorComponent({ error, reset }: { error: any; reset: () => void }) {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
-  const errorMessage = 
-    error instanceof Error ? error.message :
-    typeof error === 'string' ? error :
-    error?.message || error?.statusText || "An unexpected error occurred.";
+  const errorMessage = getFriendlyErrorMessage(error);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
