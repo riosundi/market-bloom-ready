@@ -115,7 +115,7 @@ function Index() {
           .from("products")
           .select("*, product_images(*)")
           .eq("status", "active")
-          .limit(8);
+          .limit(20);
         
         if (internalProducts && internalProducts.length > 0) {
           return internalProducts.map(p => ({
@@ -143,7 +143,7 @@ function Index() {
       // Fallback to Shopify if no internal products
       const data = await storefrontApiRequest(`
         query GetLandingCatalog {
-          products(first: 8) {
+          products(first: 20) {
             edges {
               node {
                 id
