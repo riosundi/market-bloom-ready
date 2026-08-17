@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
  * MCP Server Implementation for Tileta
@@ -10,14 +11,17 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  */
 
 export const mcpCallTool = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator((data: unknown): { name: string; arguments?: Record<string, any> | undefined } => {
     return z.object({
       name: z.string(),
       arguments: z.record(z.string(), z.any()).optional()
     }).parse(data);
   })
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
     const { name, arguments: args } = data;
+
 
     switch (name) {
       case "get_products": {
@@ -47,7 +51,9 @@ export const mcpCallTool = createServerFn({ method: "POST" })
           .from("orders")
           .select("*")
           .eq("id", orderId)
+          .eq("student_id", userId)
           .single();
+
 
         if (error) throw new Error(error.message);
 
@@ -62,7 +68,9 @@ export const mcpCallTool = createServerFn({ method: "POST" })
   });
 
 export const mcpListTools = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .handler(async () => {
+
     return {
       tools: [
         {

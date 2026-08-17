@@ -8,14 +8,19 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  * and then consumed by an agent (or the user interface acting as one).
  */
 
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
 export const askAgent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator((data: unknown): { prompt: string } => {
     return z.object({
       prompt: z.string(),
     }).parse(data);
   })
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
     const { prompt } = data;
+
     const lowerPrompt = prompt.toLowerCase();
 
     // SIMPLE MOCK AGENT LOGIC
@@ -42,8 +47,10 @@ export const askAgent = createServerFn({ method: "POST" })
       const { data: orders } = await supabaseAdmin
         .from("orders")
         .select("id, status, total, created_at")
+        .eq("student_id", userId)
         .order("created_at", { ascending: false })
         .limit(1);
+
 
       if (!orders || orders.length === 0) {
         return {
