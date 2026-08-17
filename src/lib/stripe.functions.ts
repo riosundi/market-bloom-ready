@@ -8,7 +8,7 @@ const getStripe = () => {
     throw new Error("STRIPE_SECRET_KEY is not configured. Please add it via the secrets tool.");
   }
   return new Stripe(secretKey, {
-    apiVersion: "2025-01-27-ac", // Using a stable version
+    apiVersion: "2026-07-29.dahlia" as any,
   });
 };
 
