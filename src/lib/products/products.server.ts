@@ -44,22 +44,23 @@ export async function createProduct(product: {
   stock: number;
   status?: string | null;
 }) {
+  const insertData: any = {
+    business_id: product.business_id,
+    name: product.name,
+    price: product.price,
+    category: product.category,
+    stock: product.stock,
+    status: product.status || "active",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  if (product.description !== undefined) insertData.description = product.description;
+  if (product.image_url !== undefined) insertData.image_url = product.image_url;
+
   const { data, error } = await supabaseAdmin
     .from("products")
-    .insert([
-      {
-        business_id: product.business_id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        image_url: product.image_url,
-        category: product.category,
-        stock: product.stock,
-        status: product.status || "active",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-    ])
+    .insert([insertData])
     .select()
     .single();
 
