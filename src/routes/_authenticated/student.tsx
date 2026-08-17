@@ -87,7 +87,7 @@ function StudentDashboard() {
     },
   });
 
-  const { data: orders } = useSuspenseQuery({
+  const { data: orders, error: ordersError } = useSuspenseQuery({
     queryKey: ["student-orders"],
     queryFn: () => getStudentOrders({ data: undefined }),
   });
