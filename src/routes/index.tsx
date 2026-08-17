@@ -16,7 +16,9 @@ import {
   Wallet,
   Loader2,
   AlertCircle,
+  Plus,
 } from "lucide-react";
+
 
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -325,47 +327,71 @@ function Index() {
                       <img
                         src={product.node.images.edges[0].node.url}
                         alt={product.node.images.edges[0].node.altText || product.node.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-muted-foreground">
                         No image
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                    <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-                      <Button className="w-full brand-gradient border-none" asChild>
+                    
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    
+                    {/* Quick View Button */}
+                    <div className="absolute bottom-6 left-6 right-6 translate-y-8 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                      <Button className="w-full brand-gradient border-none h-12 text-sm font-bold shadow-xl shadow-primary/20" asChild>
                         <Link to="/auth" search={{ mode: "register" }}>
-                          View Details
+                          Order Now <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>
                     </div>
                   </div>
+                  
                   <div className="flex flex-1 flex-col p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        Featured
-                      </span>
-                      <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                        <Star className="h-3 w-3 fill-primary text-primary" />
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex gap-1.5">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                          Official
+                        </span>
+                        {parseFloat(product.node.priceRange.minVariantPrice.amount) > 1000 && (
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                            Premium
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-card/80 border text-[10px] font-bold">
+                        <Star className="h-2.5 w-2.5 fill-primary text-primary" />
                         4.9
-                      </span>
+                      </div>
                     </div>
-                    <h3 className="text-lg font-bold truncate leading-tight">{product.node.title}</h3>
-                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                    
+                    <h3 className="text-xl font-bold truncate leading-tight tracking-tight group-hover:text-primary transition-colors">
+                      {product.node.title}
+                    </h3>
+                    
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground leading-relaxed min-h-[40px]">
                       {product.node.description || "Premium quality product available for world-wide delivery."}
                     </p>
-                    <div className="mt-6 flex items-center justify-between">
-                      <span className="text-xl font-black text-foreground">
-                        {formatCurrency(parseFloat(product.node.priceRange.minVariantPrice.amount))}
-                      </span>
-                      <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-                        ZMW
-                      </span>
+                    
+                    <div className="mt-6 pt-6 border-t border-primary/5 flex items-end justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-1">Price</span>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-2xl font-black tracking-tighter text-foreground">
+                            {formatCurrency(parseFloat(product.node.priceRange.minVariantPrice.amount))}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="h-8 w-8 rounded-full border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                        <Plus className="h-4 w-4" />
+                      </div>
                     </div>
                   </div>
                 </div>
               ))
+
             )}
           </div>
           
