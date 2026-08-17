@@ -65,6 +65,18 @@ export async function createProduct(product: {
     .single();
 
   if (error) throw error;
+
+  // Initialize inventory for the new product
+  if (data) {
+    await supabaseAdmin
+      .from("inventory")
+      .insert([{
+        product_id: data.id,
+        quantity: product.stock,
+        low_stock_threshold: 5
+      }]);
+  }
+
   return data;
 }
 
@@ -100,6 +112,18 @@ export async function updateProduct(
     .single();
 
   if (error) throw error;
+
+  // Sync inventory if stock was updated
+  if (updates.stock !== undefined && updates.stock !== null) {
+    await supabaseAdmin
+      .from("inventory")
+      .upsert({
+        product_id: productId,
+        quantity: updates.stock,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'product_id' });
+  }
+
   return data;
 }
 
@@ -116,10 +140,53 @@ export async function deleteProduct(productId: string) {
 export async function getSellerProducts(businessId: string) {
   const { data, error } = await supabaseAdmin
     .from("products")
-    .select("*")
+    .select("*, inventory(*), product_images(*)")
     .eq("business_id", businessId)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
   return data;
 }
+
+export async function getCategories() {
+  const { data, error } = await supabaseAdmin
+    .from("categories")
+    .select("*")
+    .eq("is_active", true)
+    .order("name");
+
+  if (error) throw error;
+  return data;
+}
+
+export async function getProductInventory(productId: string) {
+  const { data, error } = await supabaseAdmin
+    .from("inventory")
+    .select("*")
+    .eq("product_id", productId)
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function getUserTransactions(userId: string) {
+  const { data, error } = await supabaseAdmin
+    .from("transactions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function getPlatformSettings() {
+  const { data, error } = await supabaseAdmin
+    .from("platform_settings")
+    .select("*");
+
+  if (error) throw error;
+  return data;
+}
+
