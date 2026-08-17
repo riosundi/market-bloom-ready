@@ -132,7 +132,8 @@ function Index() {
               },
               images: {
                 edges: p.product_images?.[0] ? [{ node: { url: p.product_images[0].image_url, altText: p.name } }] : []
-              }
+              },
+              totalInventory: p.stock || 0
             }
           })) as any[];
         }
@@ -156,6 +157,7 @@ function Index() {
                     currencyCode
                   }
                 }
+                totalInventory
                 images(first: 1) {
                   edges {
                     node {
@@ -372,13 +374,19 @@ function Index() {
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     
-                    {/* Quick View Button */}
+                    {/* Quick View / Out of Stock Button */}
                     <div className="absolute bottom-6 left-6 right-6 translate-y-8 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                      <Button className="w-full brand-gradient border-none h-12 text-sm font-bold shadow-xl shadow-primary/20" asChild>
-                        <Link to="/auth" search={{ mode: "register" }}>
-                          Order Now <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                      </Button>
+                      {product.node.totalInventory > 0 ? (
+                        <Button className="w-full brand-gradient border-none h-12 text-sm font-bold shadow-xl shadow-primary/20" asChild>
+                          <Link to="/auth" search={{ mode: "register" }}>
+                            Order Now <ArrowRight className="ml-2 h-4 w-4" />
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button disabled className="w-full bg-muted/80 text-muted-foreground border-none h-12 text-sm font-bold cursor-not-allowed">
+                          Out of Stock
+                        </Button>
+                      )}
                     </div>
                   </div>
                   
@@ -393,6 +401,15 @@ function Index() {
                             Premium
                           </span>
                         )}
+                        <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border ${
+                          product.node.totalInventory > 5 
+                            ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" 
+                            : product.node.totalInventory > 0 
+                            ? "text-orange-500 bg-orange-500/10 border-orange-500/20"
+                            : "text-rose-500 bg-rose-500/10 border-rose-500/20"
+                        }`}>
+                          {product.node.totalInventory > 0 ? `${product.node.totalInventory} in stock` : "Out of Stock"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-card/80 border text-[10px] font-bold">
                         <Star className="h-2.5 w-2.5 fill-primary text-primary" />

@@ -25,6 +25,7 @@ export interface ShopifyProduct {
         };
       }>;
     };
+    totalInventory: number;
     variants: {
       edges: Array<{
         node: {
