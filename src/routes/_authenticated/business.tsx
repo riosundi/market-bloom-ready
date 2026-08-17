@@ -120,6 +120,54 @@ function BusinessDashboard() {
         </Button>
       }
     >
+      <ErrorBoundary>
+        <BusinessDashboardContent 
+          orders={orders} 
+          products={products} 
+          categories={categories}
+          totalRevenue={totalRevenue}
+          setIsAddingProduct={setIsAddingProduct}
+          setEditingProduct={setEditingProduct}
+          deleteMutation={deleteMutation}
+        />
+      </ErrorBoundary>
+      
+      {/* Product Form Modals */}
+      {isAddingProduct && (
+        <ProductModal 
+          categories={categories}
+          onClose={() => setIsAddingProduct(false)} 
+          onSubmit={(data) => createMutation.mutate(data)}
+        />
+      )}
+
+      {editingProduct && (
+        <ProductModal 
+          product={editingProduct}
+          categories={categories}
+          onClose={() => setEditingProduct(null)} 
+          onSubmit={(data) => updateMutation.mutate({ productId: editingProduct.id, updates: data })}
+        />
+      )}
+    </AppShell>
+  );
+}
+
+function ErrorBoundary({ children }: { children: React.ReactNode }) {
+  return children; // For now, we rely on the root boundary, but we could wrap specific sections
+}
+
+function BusinessDashboardContent({ 
+  orders, 
+  products, 
+  categories, 
+  totalRevenue,
+  setIsAddingProduct,
+  setEditingProduct,
+  deleteMutation
+}: any) {
+  return (
+    <>
       <div className="grid gap-4 md:grid-cols-4">
         <Stat icon={TrendingUp} label="Revenue" value={formatCurrency(totalRevenue)} />
         <Stat icon={ShoppingBag} label="Orders" value={orders?.length.toString() || "0"} />
@@ -232,27 +280,7 @@ function BusinessDashboard() {
           )}
         </section>
       </div>
-
-      {/* Product Form Modals could be added here */}
-      {isAddingProduct && (
-        <ProductModal 
-          categories={categories}
-          onClose={() => setIsAddingProduct(false)} 
-          onSubmit={(data) => createMutation.mutate(data)}
-        />
-
-      )}
-
-      {editingProduct && (
-        <ProductModal 
-          product={editingProduct}
-          categories={categories}
-          onClose={() => setEditingProduct(null)} 
-          onSubmit={(data) => updateMutation.mutate({ productId: editingProduct.id, updates: data })}
-        />
-
-      )}
-    </AppShell>
+    </>
   );
 }
 
