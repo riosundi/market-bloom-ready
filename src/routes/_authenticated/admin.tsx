@@ -39,18 +39,18 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 function AdminDashboard() {
-  const { data: categories } = useSuspenseQuery({
+  const { data: categories, error: categoriesError } = useSuspenseQuery({
     queryKey: ["admin-categories"],
     queryFn: () => getCategories(),
   });
 
-  const { data: settings } = useSuspenseQuery({
+  const { data: settings, error: settingsError } = useSuspenseQuery({
     queryKey: ["admin-settings"],
     queryFn: () => getPlatformSettings(),
   });
 
   // Fetch platform stats
-  const { data: stats } = useSuspenseQuery({
+  const { data: stats, error: statsError } = useSuspenseQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
       const [
@@ -89,6 +89,14 @@ function AdminDashboard() {
         </Button>
       }
     >
+      {(categoriesError || settingsError || statsError) && (
+        <div className="mb-6 p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive">
+          <AlertCircle className="h-5 w-5" />
+          <div className="text-sm">
+            <span className="font-bold">Administrative Data Error:</span> Some management panels could not be populated.
+          </div>
+        </div>
+      )}
       <div className="grid gap-4 md:grid-cols-4">
         <Stat icon={Users} label="Total Users" value={stats.users.toString()} />
         <Stat icon={Store} label="Active Stores" value={stats.businesses.toString()} />
