@@ -8,6 +8,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useShopifyCartSync } from "@/hooks/use-shopify-cart-sync";
 
 import appCss from "../styles.css?url";
@@ -37,38 +39,59 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: any; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
+  const errorMessage = 
+    error instanceof Error ? error.message :
+    typeof error === 'string' ? error :
+    error?.message || error?.statusText || "An unexpected error occurred.";
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
+      <div className="max-w-md w-full text-center space-y-6">
+        <div className="flex justify-center">
+          <div className="h-20 w-20 rounded-3xl bg-destructive/10 flex items-center justify-center text-destructive">
+            <AlertCircle className="h-10 w-10" />
+          </div>
+        </div>
+        
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Something went wrong
+          </h1>
+          <div className="mt-4 p-4 rounded-2xl bg-muted/50 border border-border text-left overflow-auto max-h-[200px]">
+            <p className="text-sm font-mono text-muted-foreground break-words">
+              {errorMessage}
+            </p>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground">
+            We've been notified and are looking into it. In the meantime, you can try refreshing the page.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <Button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="rounded-xl px-6"
           >
             Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          </Button>
+          <Button
+            variant="outline"
+            asChild
+            className="rounded-xl px-6"
           >
-            Go home
-          </a>
+            <Link to="/">Go home</Link>
+          </Button>
         </div>
       </div>
     </div>

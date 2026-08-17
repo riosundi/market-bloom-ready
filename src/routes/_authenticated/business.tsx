@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Package, ShoppingBag, Store, TrendingUp, Plus, Edit, Trash2, Check, X } from "lucide-react";
+import { Package, ShoppingBag, Store, TrendingUp, Plus, Edit, Trash2, Check, X, AlertCircle } from "lucide-react";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { AppShell } from "@/components/app-shell";
@@ -52,17 +52,17 @@ function BusinessDashboard() {
       });
   }
 
-  const { data: orders } = useSuspenseQuery({
+  const { data: orders, error: ordersError } = useSuspenseQuery({
     queryKey: ["seller-orders", businessId],
     queryFn: () => businessId ? getSellerOrders({ data: { businessId } }) : Promise.resolve([]),
   });
 
-  const { data: categories } = useSuspenseQuery({
+  const { data: categories, error: categoriesError } = useSuspenseQuery({
     queryKey: ["categories"],
     queryFn: () => getCategories(),
   });
 
-  const { data: products } = useSuspenseQuery({
+  const { data: products, error: productsError } = useSuspenseQuery({
     queryKey: ["seller-products", businessId],
     queryFn: () => businessId ? getSellerProducts({ data: { businessId } }) : Promise.resolve([]),
   });
@@ -120,6 +120,57 @@ function BusinessDashboard() {
         </Button>
       }
     >
+      {(ordersError || productsError || categoriesError) && (
+        <div className="mb-6 p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive">
+          <AlertCircle className="h-5 w-5" />
+          <div className="text-sm">
+            <span className="font-bold">Dashboard Sync Issue:</span> Some data couldn't be loaded. 
+            {ordersError && " Order data is unavailable."}
+            {productsError && " Product inventory is unavailable."}
+            {categoriesError && " Category list is unavailable."}
+          </div>
+        </div>
+      )}
+      <BusinessDashboardContent 
+        orders={orders} 
+        products={products} 
+        categories={categories}
+        totalRevenue={totalRevenue}
+        setEditingProduct={setEditingProduct}
+        deleteMutation={deleteMutation}
+      />
+      
+      {/* Product Form Modals */}
+      {isAddingProduct && (
+        <ProductModal 
+          categories={categories}
+          onClose={() => setIsAddingProduct(false)} 
+          onSubmit={(data) => createMutation.mutate(data)}
+        />
+      )}
+
+      {editingProduct && (
+        <ProductModal 
+          product={editingProduct}
+          categories={categories}
+          onClose={() => setEditingProduct(null)} 
+          onSubmit={(data) => updateMutation.mutate({ productId: editingProduct.id, updates: data })}
+        />
+      )}
+    </AppShell>
+  );
+}
+
+function BusinessDashboardContent({ 
+  orders, 
+  products, 
+  categories, 
+  totalRevenue,
+  setEditingProduct,
+  deleteMutation
+}: any) {
+  return (
+    <>
       <div className="grid gap-4 md:grid-cols-4">
         <Stat icon={TrendingUp} label="Revenue" value={formatCurrency(totalRevenue)} />
         <Stat icon={ShoppingBag} label="Orders" value={orders?.length.toString() || "0"} />
@@ -232,27 +283,7 @@ function BusinessDashboard() {
           )}
         </section>
       </div>
-
-      {/* Product Form Modals could be added here */}
-      {isAddingProduct && (
-        <ProductModal 
-          categories={categories}
-          onClose={() => setIsAddingProduct(false)} 
-          onSubmit={(data) => createMutation.mutate(data)}
-        />
-
-      )}
-
-      {editingProduct && (
-        <ProductModal 
-          product={editingProduct}
-          categories={categories}
-          onClose={() => setEditingProduct(null)} 
-          onSubmit={(data) => updateMutation.mutate({ productId: editingProduct.id, updates: data })}
-        />
-
-      )}
-    </AppShell>
+    </>
   );
 }
 
