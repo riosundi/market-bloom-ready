@@ -144,7 +144,7 @@ function Index() {
       // Fallback to Shopify if no internal products
       const data = await storefrontApiRequest(`
         query GetLandingCatalog {
-          products(first: 20) {
+          products(first: 100) {
             edges {
               node {
                 id
