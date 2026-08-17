@@ -121,6 +121,14 @@ function BusinessDashboard() {
       </div>
 
       <div className="mt-8 space-y-8">
+        {products?.some((p: any) => p.inventory?.[0]?.quantity <= p.inventory?.[0]?.low_stock_threshold) && (
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-600">
+            <Package className="h-5 w-5" />
+            <div className="text-sm">
+              <span className="font-bold">Low Stock Alert:</span> Some products are running low on stock. Please restock soon.
+            </div>
+          </div>
+        )}
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">Product Inventory</h2>
