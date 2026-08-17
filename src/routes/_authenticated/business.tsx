@@ -120,17 +120,14 @@ function BusinessDashboard() {
         </Button>
       }
     >
-      <ErrorBoundary>
-        <BusinessDashboardContent 
-          orders={orders} 
-          products={products} 
-          categories={categories}
-          totalRevenue={totalRevenue}
-          setIsAddingProduct={setIsAddingProduct}
-          setEditingProduct={setEditingProduct}
-          deleteMutation={deleteMutation}
-        />
-      </ErrorBoundary>
+      <BusinessDashboardContent 
+        orders={orders} 
+        products={products} 
+        categories={categories}
+        totalRevenue={totalRevenue}
+        setEditingProduct={setEditingProduct}
+        deleteMutation={deleteMutation}
+      />
       
       {/* Product Form Modals */}
       {isAddingProduct && (
@@ -153,16 +150,11 @@ function BusinessDashboard() {
   );
 }
 
-function ErrorBoundary({ children }: { children: React.ReactNode }) {
-  return children; // For now, we rely on the root boundary, but we could wrap specific sections
-}
-
 function BusinessDashboardContent({ 
   orders, 
   products, 
   categories, 
   totalRevenue,
-  setIsAddingProduct,
   setEditingProduct,
   deleteMutation
 }: any) {
