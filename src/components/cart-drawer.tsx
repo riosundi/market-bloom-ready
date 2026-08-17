@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, CreditCard, Loader2 } from "lucide-react";
 import { useShopifyCartStore } from "@/stores/shopify-cart";
 import { formatCurrency } from "@/lib/roles";
+import { createCheckoutSession } from "@/lib/stripe.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } = useShopifyCartStore();
+  const { items, isLoading: isCartLoading, isSyncing, updateQuantity, removeItem, syncCart } = useShopifyCartStore();
+  const checkoutFn = useServerFn(createCheckoutSession);
+  const [isProcessingStripe, setIsProcessingStripe] = useState(false);
+
+  const isLoading = isCartLoading || isProcessingStripe;
   
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
@@ -17,10 +24,35 @@ export const CartDrawer = () => {
     if (isOpen) syncCart();
   }, [isOpen, syncCart]);
 
-  const handleCheckout = () => {
-    const checkoutUrl = getCheckoutUrl();
-    if (checkoutUrl) {
-      window.open(checkoutUrl, '_blank');
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+    
+    setIsProcessingStripe(true);
+    try {
+      const checkoutItems = items.map(item => ({
+        id: item.variantId,
+        name: item.product.node.title,
+        price: parseFloat(item.price.amount),
+        quantity: item.quantity,
+        image: item.product.node.images?.edges?.[0]?.node?.url
+      }));
+
+      const { url } = await checkoutFn({
+        data: {
+          items: checkoutItems,
+          successUrl: `${window.location.origin}/student?session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${window.location.origin}/student`,
+        }
+      });
+
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error("Stripe checkout error:", error);
+      toast.error("Failed to initiate checkout. Please ensure Stripe is configured.");
+    } finally {
+      setIsProcessingStripe(false);
       setIsOpen(false);
     }
   };
@@ -132,13 +164,13 @@ export const CartDrawer = () => {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Checkout via Shopify
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      Pay with Stripe (ZMW)
                     </>
                   )}
                 </Button>
                 <p className="text-[10px] text-center text-muted-foreground px-4">
-                  Secure checkout powered by Shopify. Delivery fees will be calculated at the final step.
+                  Secure checkout with Zambian Kwacha (ZMW) support.
                 </p>
               </div>
             </>
