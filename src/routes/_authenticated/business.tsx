@@ -4,8 +4,8 @@ import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-q
 import { useAuth } from "@/hooks/use-auth";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
-import { formatCurrency, CATEGORIES } from "@/lib/roles";
-import { getSellerOrders, getSellerProducts, createProduct, updateProduct, deleteProduct } from "@/lib/products/products.functions";
+import { formatCurrency } from "@/lib/roles";
+import { getSellerOrders, getSellerProducts, createProduct, updateProduct, deleteProduct, getCategories } from "@/lib/products/products.functions";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -57,12 +57,13 @@ function BusinessDashboard() {
     queryFn: () => businessId ? getSellerOrders({ data: { businessId } }) : Promise.resolve([]),
   });
 
-  const { data: products } = useSuspenseQuery({
-    queryKey: ["seller-products", businessId],
-    queryFn: () => businessId ? getSellerProducts({ data: { businessId } }) : Promise.resolve([]),
+  const { data: categories } = useSuspenseQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories(),
   });
 
   const createMutation = useMutation({
+
     mutationFn: (newProduct: any) => createProduct({ data: { ...newProduct, businessId } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seller-products"] });
@@ -229,31 +230,36 @@ function BusinessDashboard() {
       {/* Product Form Modals could be added here */}
       {isAddingProduct && (
         <ProductModal 
+          categories={categories}
           onClose={() => setIsAddingProduct(false)} 
           onSubmit={(data) => createMutation.mutate(data)}
         />
+
       )}
 
       {editingProduct && (
         <ProductModal 
           product={editingProduct}
+          categories={categories}
           onClose={() => setEditingProduct(null)} 
           onSubmit={(data) => updateMutation.mutate({ productId: editingProduct.id, updates: data })}
         />
+
       )}
     </AppShell>
   );
 }
 
-function ProductModal({ product, onClose, onSubmit }: { product?: any, onClose: () => void, onSubmit: (data: any) => void }) {
+function ProductModal({ product, categories, onClose, onSubmit }: { product?: any, categories: any[], onClose: () => void, onSubmit: (data: any) => void }) {
   const [formData, setFormData] = useState({
     name: product?.name || "",
     description: product?.description || "",
     price: product?.price || 0,
-    category: product?.category || CATEGORIES[0],
+    category: product?.category || (categories?.[0]?.name || ""),
     stock: product?.stock || 0,
     status: product?.status || "active",
   });
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
@@ -314,7 +320,7 @@ function ProductModal({ product, onClose, onSubmit }: { product?: any, onClose: 
               value={formData.category}
               onChange={(e) => setFormData({...formData, category: e.target.value})}
             >
-              {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+              {categories?.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
             </select>
           </div>
           <div>
