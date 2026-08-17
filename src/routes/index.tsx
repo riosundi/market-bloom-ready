@@ -115,7 +115,7 @@ function Index() {
           .from("products")
           .select("*, product_images(*)")
           .eq("status", "active")
-          .limit(20);
+          .limit(100);
         
         if (internalProducts && internalProducts.length > 0) {
           return internalProducts.map(p => ({
