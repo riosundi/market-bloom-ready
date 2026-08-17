@@ -155,7 +155,14 @@ function BusinessDashboard() {
                     </td>
                     <td className="px-6 py-4">{product.category}</td>
                     <td className="px-6 py-4">{formatCurrency(product.price)}</td>
-                    <td className="px-6 py-4">{product.stock}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span>{product.inventory?.[0]?.quantity ?? product.stock}</span>
+                        {product.inventory?.[0]?.quantity <= product.inventory?.[0]?.low_stock_threshold && (
+                          <span className="text-[10px] text-amber-500 font-bold uppercase">Low Stock</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-6 py-4">
                       <span className={`capitalize px-2 py-1 rounded-full text-[10px] font-bold ${
                         product.status === 'active' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
