@@ -48,7 +48,13 @@ export async function createProduct(product: {
     .from("products")
     .insert([
       {
-        ...product,
+        business_id: product.business_id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        image_url: product.image_url,
+        category: product.category,
+        stock: product.stock,
         status: product.status || "active",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -73,12 +79,21 @@ export async function updateProduct(
     status: string | null;
   }>
 ) {
+  const updatePayload: any = {
+    updated_at: new Date().toISOString()
+  };
+  
+  if (updates.name !== undefined) updatePayload.name = updates.name;
+  if (updates.description !== undefined) updatePayload.description = updates.description;
+  if (updates.price !== undefined) updatePayload.price = updates.price;
+  if (updates.image_url !== undefined) updatePayload.image_url = updates.image_url;
+  if (updates.category !== undefined && updates.category !== null) updatePayload.category = updates.category;
+  if (updates.stock !== undefined && updates.stock !== null) updatePayload.stock = updates.stock;
+  if (updates.status !== undefined && updates.status !== null) updatePayload.status = updates.status;
+
   const { data, error } = await supabaseAdmin
     .from("products")
-    .update({
-      ...updates,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq("id", productId)
     .select()
     .single();

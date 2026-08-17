@@ -78,12 +78,12 @@ export const createProduct = createServerFn({ method: "POST" })
     return createProductInDB({
       business_id: data.businessId,
       name: data.name,
-      description: data.description,
+      description: data.description ?? null,
       price: data.price,
-      image_url: data.imageUrl,
+      image_url: data.imageUrl ?? null,
       category: data.category,
       stock: data.stock,
-      status: data.status,
+      status: data.status ?? null,
     });
   });
 
@@ -105,13 +105,13 @@ export const updateProduct = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     return updateProductInDB(data.productId, {
-      name: data.updates.name,
-      description: data.updates.description,
-      price: data.updates.price,
-      image_url: data.updates.imageUrl,
-      category: data.updates.category,
-      stock: data.updates.stock,
-      status: data.updates.status,
+      name: data.updates.name ?? null,
+      description: data.updates.description ?? null,
+      price: data.updates.price ?? null,
+      image_url: data.updates.imageUrl ?? null,
+      category: data.updates.category ?? null,
+      stock: data.updates.stock ?? null,
+      status: data.updates.status ?? null,
     });
   });
 
